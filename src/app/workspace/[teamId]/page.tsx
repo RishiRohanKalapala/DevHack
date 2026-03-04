@@ -152,7 +152,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
 
             {/* Sidebar */}
             <aside className={`w-72 border-r border-white/5 bg-black flex flex-col fixed inset-y-0 z-[60] transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full shadow-2xl"}`}>
-                <div className="">
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
                     <div className="flex flex-col items-center pt-2 pb-8 px-4 border-b border-white/5">
                         <div className="w-48 h-32 flex items-center justify-center">
                             <img
@@ -170,7 +170,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                         </div>
                     </div>
 
-                    <nav className="space-y-1">
+                    <nav className="space-y-1 p-2">
                         {MODULES.map((mod) => (
                             <button
                                 key={mod.id}

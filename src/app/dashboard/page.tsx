@@ -72,21 +72,23 @@ export default function DashboardPage() {
 
             {/* Sidebar */}
             <aside className={`w-72 border-r border-white/5 bg-black flex flex-col fixed inset-y-0 z-[60] transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-                <div className="flex flex-col items-center pt-2 pb-8 px-4 border-b border-white/5">
-                    <div className="w-48 h-32 flex items-center justify-center">
-                        <img
-                            src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
-                            alt="Logo"
-                            className="w-full h-full object-contain"
-                        />
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                    <div className="flex flex-col items-center pt-2 pb-8 px-4 border-b border-white/5">
+                        <div className="w-48 h-32 flex items-center justify-center">
+                            <img
+                                src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
+                                alt="Logo"
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
                     </div>
-                </div>
 
-                <nav className="p-4 space-y-1">
-                    <SidebarLink icon={<LayoutDashboard className="w-4 h-4" />} label="All Teams" active />
-                    <SidebarLink icon={<Plus className="w-4 h-4" />} label="Join Workspace" />
-                    <SidebarLink icon={<Settings className="w-4 h-4" />} label="Settings" />
-                </nav>
+                    <nav className="p-4 space-y-1">
+                        <SidebarLink icon={<LayoutDashboard className="w-4 h-4" />} label="All Teams" active />
+                        <SidebarLink icon={<Plus className="w-4 h-4" />} label="Join Workspace" />
+                        <SidebarLink icon={<Settings className="w-4 h-4" />} label="Settings" />
+                    </nav>
+                </div>
 
                 <div className="mt-auto p-6 border-t border-white/5">
                     <button
