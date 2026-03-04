@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
+import { getCachedData, setCachedData } from "@/lib/redis";
 
 export async function GET() {
+    const cacheKey = "problem_statements_global";
+    const cached = await getCachedData(cacheKey);
+
+    if (cached) {
+        console.log("Serving problem statements from Redis cache");
+        return NextResponse.json(cached);
+    }
+
     // Curated high-quality problem statements from Smart India Hackathon 2025 and Global Sources
     const problemStatements = [
         {
@@ -160,6 +169,9 @@ export async function GET() {
         const j = Math.floor(Math.random() * (i + 1));
         [problemStatements[i], problemStatements[j]] = [problemStatements[j], problemStatements[i]];
     }
+
+    // Cache for 5 minutes (300 seconds)
+    await setCachedData(cacheKey, problemStatements, 300);
 
     return NextResponse.json(problemStatements);
 }

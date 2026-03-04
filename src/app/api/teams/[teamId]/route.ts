@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth-utils";
-
+import { getCachedData, setCachedData } from "@/lib/redis";
 
 export async function GET(
     req: Request,
@@ -15,6 +15,17 @@ export async function GET(
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
+        // 1. Try to get from Cache (Load Balancing / Performance)
+        const cacheKey = `user:${userId}:team:${teamId}`;
+        const cachedTeam = await getCachedData(cacheKey);
+
+        if (cachedTeam) {
+            console.log(`Cache HIT for ${cacheKey}`);
+            return NextResponse.json(cachedTeam);
+        }
+
+        // 2. Cache MISS - Query Database
+        console.log(`Cache MISS for ${cacheKey}`);
         const team = await prisma.team.findUnique({
             where: {
                 id: teamId,
@@ -22,7 +33,6 @@ export async function GET(
                     some: { userId }
                 }
             },
-
             include: {
                 _count: {
                     select: { members: true }
@@ -56,7 +66,6 @@ export async function GET(
                     }
                 }
             }
-
         });
 
         if (!team) {
@@ -65,6 +74,9 @@ export async function GET(
                 { status: 404 }
             );
         }
+
+        // 3. Update Cache (TTL 60s for Balancing)
+        await setCachedData(cacheKey, team, 60);
 
         return NextResponse.json(team);
     } catch (error: any) {
