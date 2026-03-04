@@ -1953,37 +1953,101 @@ function BrowseToolsModule() {
 }
 
 function LLMModule({ team }: { team: any }) {
-    const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([]);
+    const [sessions, setSessions] = useState<{ id: string, title: string, messages: { role: 'user' | 'assistant', content: string }[], updatedAt: number }[]>([]);
+    const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSendMessage = async (e?: React.FormEvent) => {
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem(`chat-sessions-${team.id}`);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                setSessions(parsed);
+                if (parsed.length > 0) setCurrentSessionId(parsed[0].id);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }, [team.id]);
+
+    useEffect(() => {
+        if (sessions.length > 0) {
+            localStorage.setItem(`chat-sessions-${team.id}`, JSON.stringify(sessions));
+        } else {
+            localStorage.removeItem(`chat-sessions-${team.id}`);
+        }
+    }, [sessions, team.id]);
+
+    const activeSession = sessions.find(s => s.id === currentSessionId);
+    const messages = activeSession ? activeSession.messages : [];
+
+    const createNewChat = () => {
+        const newSession = { id: Date.now().toString(), title: "New Chat", messages: [], updatedAt: Date.now() };
+        setSessions(prev => [newSession, ...prev]);
+        setCurrentSessionId(newSession.id);
+    };
+
+    const updateCurrentSession = (newMessages: { role: 'user' | 'assistant', content: string }[]) => {
+        setSessions(prev => {
+            let sessionExists = false;
+            let title = "New Chat";
+            if (newMessages.length > 0) {
+                const firstUser = newMessages.find(m => m.role === 'user');
+                if (firstUser) title = firstUser.content.slice(0, 30) + (firstUser.content.length > 30 ? "..." : "");
+            }
+            const updated = prev.map(s => {
+                if (s.id === currentSessionId) {
+                    sessionExists = true;
+                    return { ...s, messages: newMessages, updatedAt: Date.now(), title };
+                }
+                return s;
+            });
+            if (!sessionExists && currentSessionId) {
+                return [{ id: currentSessionId, title, messages: newMessages, updatedAt: Date.now() }, ...prev];
+            }
+            return updated;
+        });
+    };
+
+    const deleteSession = (id: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setSessions(prev => {
+            const next = prev.filter(s => s.id !== id);
+            if (currentSessionId === id) setCurrentSessionId(next.length > 0 ? next[0].id : null);
+            return next;
+        });
+    };
+
+    const handleSendMessage = async (e?: React.FormEvent, predefinedInput?: string) => {
         if (e) e.preventDefault();
-        const textToSend = input.trim();
+        const textToSend = (predefinedInput || input).trim();
         if (!textToSend || isLoading) return;
 
-        const userMessage = { role: 'user' as const, content: textToSend };
-        setMessages(prev => [...prev, userMessage]);
-        setInput("");
+        let activeId = currentSessionId;
+        if (!activeId) {
+            activeId = Date.now().toString();
+            setCurrentSessionId(activeId);
+        }
+
+        const updatedMessages = [...messages, { role: 'user' as const, content: textToSend }];
+        updateCurrentSession(updatedMessages);
+
+        if (!predefinedInput) setInput("");
         setIsLoading(true);
 
         try {
             const res = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    message: textToSend,
-                    context: JSON.stringify(team)
-                })
+                body: JSON.stringify({ message: textToSend, context: JSON.stringify(team) })
             });
-
             if (!res.ok) throw new Error("Failed to get response");
             const data = await res.json();
-
-            setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
+            updateCurrentSession([...updatedMessages, { role: 'assistant', content: data.text }]);
         } catch (error) {
             console.error(error);
-            setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error. Please verify the system configuration." }]);
+            updateCurrentSession([...updatedMessages, { role: 'assistant', content: "Sorry, an error occurred." }]);
         } finally {
             setIsLoading(false);
         }
@@ -2002,81 +2066,107 @@ function LLMModule({ team }: { team: any }) {
                 </div>
             </div>
 
-            <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col relative overflow-hidden">
-                <div className="flex-1 overflow-y-auto space-y-6 mb-4 scrollbar-hide pr-2">
-                    {messages.length === 0 ? (
-                        <div className="h-full flex flex-col items-center justify-center text-center space-y-8 max-w-lg mx-auto">
-                            <div className="space-y-4">
-                                <h3 className="text-3xl font-semibold text-white tracking-tight">How can I assist your team today?</h3>
-                                <p className="text-zinc-500 text-sm leading-relaxed max-w-sm mx-auto">
-                                    I have been trained with high-detail extraction models to provide deep project context and technical precision.
+            <div className="flex-1 flex gap-4 overflow-hidden relative">
+                {/* History Sidebar */}
+                <div className="w-64 bg-[#121214] border border-[#27272a] rounded-[1.5rem] p-4 flex flex-col pt-6 hidden md:flex h-full shrink-0">
+                    <div className="flex justify-between items-center mb-6 px-2">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">History</h3>
+                        <button onClick={createNewChat} className="text-violet-400 hover:text-violet-300 p-1.5 rounded-lg hover:bg-violet-500/10 transition-all">
+                            <Plus className="w-4 h-4" />
+                        </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                        {sessions.map(s => (
+                            <div
+                                key={s.id}
+                                onClick={() => setCurrentSessionId(s.id)}
+                                className={`p-3 rounded-xl border cursor-pointer group relative transition-all flex items-center justify-between ${s.id === currentSessionId ? "bg-violet-500/10 border-violet-500/30" : "bg-black/20 border-transparent hover:border-white/5"}`}
+                            >
+                                <p className={`text-xs font-semibold truncate pr-6 ${s.id === currentSessionId ? "text-violet-300" : "text-zinc-400 group-hover:text-zinc-300"}`}>
+                                    {s.title}
                                 </p>
+                                <button
+                                    onClick={(e) => deleteSession(s.id, e)}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 text-zinc-600 hover:text-rose-400 transition-all"
+                                >
+                                    <Trash2 className="w-3 h-3" />
+                                </button>
                             </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-6">
-                                {["Draft project readme", "Analyze problem statement", "Fix react bug", "Generate tech stack"].map((p, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => {
-                                            setInput(p);
-                                            fetch("/api/chat", {
-                                                method: "POST",
-                                                headers: { "Content-Type": "application/json" },
-                                                body: JSON.stringify({ message: p, context: JSON.stringify(team) })
-                                            }).then(res => res.json()).then(data => {
-                                                setMessages(prev => [...prev, { role: 'user', content: p }, { role: 'assistant', content: data.text }]);
-                                            });
-                                        }}
-                                        className="p-4 rounded-2xl bg-black/40 border border-[#27272a] hover:border-violet-500/30 text-zinc-400 text-xs font-medium hover:text-white transition-all text-left"
-                                    >
-                                        {p}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        messages.map((m, i) => (
-                            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user'
-                                    ? 'bg-violet-600 text-white rounded-tr-none shadow-[0_0_20px_rgba(139,92,246,0.3)]'
-                                    : 'bg-black/40 border border-[#27272a] text-zinc-300 rounded-tl-none'
-                                    }`}>
-                                    <div className="prose prose-invert prose-sm max-w-none">
-                                        <ReactMarkdown>
-                                            {m.content}
-                                        </ReactMarkdown>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    )}
-                    {isLoading && (
-                        <div className="flex justify-start">
-                            <div className="bg-black/40 border border-[#27272a] p-4 rounded-2xl rounded-tl-none">
-                                <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
-                            </div>
-                        </div>
-                    )}
+                        ))}
+                    </div>
                 </div>
 
-                <form onSubmit={handleSendMessage} className="mt-auto relative pt-2">
-                    <input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="w-full bg-black border border-[#27272a] focus:border-violet-500/30 rounded-2xl h-16 px-8 text-sm outline-none transition-all placeholder:text-zinc-700"
-                        placeholder="Message Deep-Extraction AI..."
-                        disabled={isLoading}
-                    />
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-xl flex items-center justify-center text-black hover:bg-zinc-200 transition-all disabled:opacity-50"
-                    >
-                        <ArrowRight className="w-4 h-4" />
-                    </button>
-                </form>
+                {/* Main Chat Area */}
+                <div className="flex-1 bg-[#121214] border border-[#27272a] rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col relative overflow-hidden h-full">
+                    <div className="flex-1 overflow-y-auto space-y-6 mb-4 scrollbar-hide pr-2">
+                        {messages.length === 0 ? (
+                            <div className="h-full flex flex-col items-center justify-center text-center space-y-8 max-w-lg mx-auto">
+                                <div className="space-y-4">
+                                    <h3 className="text-3xl font-semibold text-white tracking-tight">How can I assist your team today?</h3>
+                                    <p className="text-zinc-500 text-sm leading-relaxed max-w-sm mx-auto">
+                                        I have been trained with high-detail extraction models to provide deep project context and technical precision.
+                                    </p>
+                                </div>
 
-                <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500/5 blur-[120px] -z-0" />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-6">
+                                    {["Draft project readme", "Analyze problem statement", "Fix react bug", "Generate tech stack"].map((p, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={(e) => handleSendMessage(e, p)}
+                                            className="p-4 rounded-2xl bg-black/40 border border-[#27272a] hover:border-violet-500/30 text-zinc-400 text-xs font-medium hover:text-white transition-all text-left group"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span>{p}</span>
+                                                <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-violet-400" />
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            messages.map((m, i) => (
+                                <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user'
+                                        ? 'bg-violet-600 text-white rounded-tr-none shadow-[0_0_20px_rgba(139,92,246,0.3)]'
+                                        : 'bg-black/40 border border-[#27272a] text-zinc-300 rounded-tl-none'
+                                        }`}>
+                                        <div className="prose prose-invert prose-sm max-w-none">
+                                            <ReactMarkdown>
+                                                {m.content}
+                                            </ReactMarkdown>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                        {isLoading && (
+                            <div className="flex justify-start">
+                                <div className="bg-black/40 border border-[#27272a] p-4 rounded-2xl rounded-tl-none">
+                                    <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <form onSubmit={handleSendMessage} className="mt-auto relative pt-2">
+                        <input
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            className="w-full bg-black border border-[#27272a] focus:border-violet-500/30 rounded-2xl h-16 px-8 text-sm outline-none transition-all placeholder:text-zinc-700"
+                            placeholder="Message Deep-Extraction AI..."
+                            disabled={isLoading}
+                        />
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-xl flex items-center justify-center text-black hover:bg-zinc-200 transition-all disabled:opacity-50"
+                        >
+                            <ArrowRight className="w-4 h-4" />
+                        </button>
+                    </form>
+
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-violet-500/5 blur-[120px] -z-0 pointer-events-none" />
+                </div>
             </div>
         </div>
     );
