@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Zap, Code2, ShieldAlert, Activity } from "lucide-react";
+import { ArrowRight, Zap, Code2, ShieldAlert, Activity, Github } from "lucide-react";
 import Image from "next/image";
 
 export default function LandingPage() {
@@ -111,12 +111,12 @@ export default function LandingPage() {
       </main>
 
       {/* 4. Static Minimal Footer */}
-      <footer className="flex-none w-full px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-zinc-600 font-light z-50 max-w-[90rem] mx-auto border-t border-zinc-900">
+      <footer className="flex-none w-full px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-black font-bold z-50 bg-[#f4f4f5]">
         <p className="tracking-wide">© 2026 DevHack Platform. Systems nominal.</p>
         <div className="flex items-center gap-8">
-          <Link href="#" className="hover:text-zinc-300 transition-colors tracking-wide">Twitter</Link>
-          <Link href="#" className="hover:text-zinc-300 transition-colors tracking-wide">Documentation</Link>
-          <Link href="#" className="hover:text-zinc-300 transition-colors tracking-wide">Privacy</Link>
+          <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
+            <Github className="w-5 h-5" />
+          </Link>
         </div>
       </footer>
 
