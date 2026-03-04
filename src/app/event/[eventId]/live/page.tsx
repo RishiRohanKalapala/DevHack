@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import LiveEventTimer from "./LiveEventTimer";
 import LiveAnnouncements from "./LiveAnnouncements";
-import { Activity, ShieldCheck, Zap } from "lucide-react";
+import { Activity, ShieldCheck, Zap, Trophy } from "lucide-react";
 
 export default async function LiveEventStatusPage({ params }: { params: Promise<{ eventId: string }> }) {
     const { eventId } = await params;
@@ -45,6 +45,13 @@ export default async function LiveEventStatusPage({ params }: { params: Promise<
                     <p className="text-zinc-500 text-lg font-medium tracking-tight">
                         Mission Control Portal
                     </p>
+
+                    <div className="pt-4 flex justify-center">
+                        <Link href={`/event/${event.id}/leaderboard`} className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black px-8 py-3.5 rounded-full font-bold transition-all hover:shadow-[0_0_25px_rgba(245,158,11,0.5)] hover:-translate-y-1">
+                            <Trophy className="w-5 h-5" />
+                            View Live Leaderboard
+                        </Link>
+                    </div>
                 </div>
 
                 <LiveEventTimer

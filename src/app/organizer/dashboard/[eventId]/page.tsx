@@ -50,18 +50,33 @@ export default async function EventDashboard({ params }: { params: Promise<{ eve
                         <p className="text-zinc-500 text-lg font-medium">{event.description}</p>
                     </div>
 
-                    <div className="bg-[#121214] border border-white/5 rounded-2xl p-4 flex flex-col gap-2 min-w-[300px] shadow-2xl shadow-black/50">
-                        <label className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Public Registration Link</label>
-                        <div className="flex items-center gap-2">
-                            <input
-                                readOnly
-                                value={publicLink}
-                                className="bg-black border border-white/5 rounded-xl px-4 py-2 text-sm text-zinc-400 flex-grow font-mono overflow-hidden whitespace-nowrap outline-none"
-                            />
-                            {/* Ideally handled via client component "Copy to Clipboard" but for now link placeholder */}
-                            <Link href={publicLink} target="_blank" className="p-2.5 bg-rose-600/10 text-rose-500 hover:bg-rose-600 hover:text-white rounded-lg transition-colors">
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
+                    <div className="flex flex-col gap-4">
+                        <div className="bg-[#121214] border border-white/5 rounded-2xl p-4 flex flex-col gap-2 min-w-[300px] shadow-2xl shadow-black/50">
+                            <label className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Public Registration Link</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    readOnly
+                                    value={publicLink}
+                                    className="bg-black border border-white/5 rounded-xl px-4 py-2 text-sm text-zinc-400 flex-grow font-mono overflow-hidden whitespace-nowrap outline-none"
+                                />
+                                <Link href={publicLink} target="_blank" className="p-2.5 bg-rose-600/10 text-rose-500 hover:bg-rose-600 hover:text-white rounded-lg transition-colors">
+                                    <ArrowRight className="w-4 h-4" />
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="bg-[#121214] border border-white/5 rounded-2xl p-4 flex flex-col gap-2 min-w-[300px] shadow-2xl shadow-black/50">
+                            <label className="text-xs text-zinc-500 font-bold uppercase tracking-widest flex items-center gap-2">Live Leaderboard Link</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    readOnly
+                                    value={`${publicLink}/leaderboard`}
+                                    className="bg-black border border-white/5 rounded-xl px-4 py-2 text-sm text-amber-500/80 flex-grow font-mono overflow-hidden whitespace-nowrap outline-none"
+                                />
+                                <Link href={`${publicLink}/leaderboard`} target="_blank" className="p-2.5 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white rounded-lg transition-colors">
+                                    <ArrowRight className="w-4 h-4" />
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
