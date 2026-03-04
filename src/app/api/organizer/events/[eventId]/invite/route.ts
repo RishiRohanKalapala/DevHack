@@ -1,4 +1,4 @@
-import { NextResponse } from "next/headers";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import nodemailer from "nodemailer";
 import { getOrganizerId } from "@/lib/organizer-auth-utils";

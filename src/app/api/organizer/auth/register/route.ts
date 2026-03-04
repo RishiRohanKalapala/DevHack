@@ -1,4 +1,4 @@
-import { NextResponse } from "next/headers";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { setOrganizerId } from "@/lib/organizer-auth-utils";
