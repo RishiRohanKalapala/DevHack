@@ -238,10 +238,13 @@ function OverviewModule({ team, setActiveModule }: { team: any, setActiveModule:
                             <div className="space-y-2">
                                 <div className="flex justify-between text-xs font-mono uppercase">
                                     <span className="text-zinc-500">Tasks Complete</span>
-                                    <span className="text-emerald-400">0%</span>
+                                    <span className="text-emerald-400">{Math.round((team.tasks?.filter((t: any) => t.status === "DONE").length || 0) / (team.tasks?.length || 1) * 100)}%</span>
                                 </div>
                                 <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
-                                    <div className="h-full w-[0%] bg-emerald-500 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-1000" />
+                                    <div
+                                        className="h-full bg-emerald-500 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-1000"
+                                        style={{ width: `${Math.round((team.tasks?.filter((t: any) => t.status === "DONE").length || 0) / (team.tasks?.length || 1) * 100)}%` }}
+                                    />
                                 </div>
                             </div>
                         </CardContent>
@@ -348,8 +351,8 @@ function TasksModule({ teamId, initialTasks }: { teamId: string, initialTasks: a
 
             <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
                 {columns.map(col => {
-                    const statusKey = col.toLowerCase().replace(" ", "_");
-                    const colTasks = tasks?.filter(t => t.status.toLowerCase() === statusKey);
+                    const statusKey = col === "To Do" ? "todo" : col.toLowerCase().replace(" ", "_");
+                    const colTasks = tasks?.filter(t => t.status?.toLowerCase() === statusKey);
 
                     return (
                         <div key={col} className="space-y-4">
