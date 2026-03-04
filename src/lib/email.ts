@@ -68,15 +68,8 @@ export async function sendInviteEmail(
         <table class="main-table" border="0" cellspacing="0" cellpadding="0">
           <!-- Header -->
           <tr>
-            <td style="background-color: #000000; padding: 32px; border-bottom: 1px solid #27272a;">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td width="40" style="padding-right: 12px;">
-                    <div style="width: 40px; height: 40px; background-color: #4f46e5; border-radius: 10px; color: #ffffff; font-family: sans-serif; font-weight: 900; font-size: 18px; text-align: center; line-height: 40px;">D</div>
-                  </td>
-                  <td style="color: #ffffff; font-family: sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">DevHack</td>
-                </tr>
-              </table>
+            <td align="center" style="background-color: #000000; padding: 24px 32px; border-bottom: 1px solid #27272a;">
+              <img src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png" width="180" alt="DevHack Logo" style="display: block; outline: none; border: none; text-decoration: none;">
             </td>
           </tr>
 
