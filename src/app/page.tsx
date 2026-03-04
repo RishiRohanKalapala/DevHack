@@ -85,10 +85,10 @@ export default function LandingPage() {
       </main>
 
       {/* 4. Static Minimal Footer */}
-      <footer className="flex-none w-full px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-black font-bold z-50 bg-[#f4f4f5]">
-        <p className="tracking-wide">© 2026 DevHack Platform. Systems nominal.</p>
+      <footer className="flex-none w-full px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white font-medium tracking-wide z-50 bg-[#4f46e5]">
+        <p>© 2026 DevHack Platform. Systems nominal.</p>
         <div className="flex items-center gap-8">
-          <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
+          <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
             <Github className="w-5 h-5" />
           </Link>
         </div>
