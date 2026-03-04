@@ -59,12 +59,18 @@ export default function CreateTeamPage() {
                     />
                 </Link>
             </div>
-
             <div className="max-w-4xl mx-auto space-y-8 relative">
-                <button onClick={() => router.back()} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-all group mb-8 font-medium">
-                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                    Back to onboarding
-                </button>
+                <nav className="flex items-center space-x-2 text-sm font-medium text-zinc-500 mb-8">
+                    <Link href="/dashboard" className="hover:text-white transition-colors">
+                        Dashboard
+                    </Link>
+                    <span className="text-zinc-700">/</span>
+                    <Link href="/onboarding" className="hover:text-white transition-colors">
+                        Onboarding
+                    </Link>
+                    <span className="text-zinc-700">/</span>
+                    <span className="text-indigo-400">Create Team</span>
+                </nav>
 
                 <div className="space-y-4">
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight font-outfit">Set up your workspace.</h1>
@@ -190,6 +196,6 @@ export default function CreateTeamPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
