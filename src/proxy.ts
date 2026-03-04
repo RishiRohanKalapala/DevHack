@@ -6,6 +6,9 @@ export function proxy(request: NextRequest) {
     const organizerId = request.cookies.get("organizerId")?.value;
     const { pathname } = request.nextUrl;
 
+    // Normalize pathname (remove trailing slash except for root)
+    const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
+
     // Public paths that don't need auth
     const publicPaths = [
         "/",
@@ -16,16 +19,20 @@ export function proxy(request: NextRequest) {
         "/organizer/login",
         "/organizer/register"
     ];
-    const isPublicPath = publicPaths.includes(pathname);
+    const isPublicPath = publicPaths.includes(normalizedPath);
+
+    console.log(`[Proxy] Path: ${pathname} | Normalized: ${normalizedPath} | isPublic: ${isPublicPath} | userId: ${userId} | organizerId: ${organizerId}`);
 
     // 1. Organizer Route Protection
-    if (pathname.startsWith("/organizer")) {
+    if (normalizedPath.startsWith("/organizer")) {
         // If trying to access organizer dashboard/etc without organizerId
-        if (!organizerId && !isPublicPath && pathname !== "/organizer/onboarding") {
+        if (!organizerId && !isPublicPath && normalizedPath !== "/organizer/onboarding") {
+            console.log(`[Proxy] Redirecting organzier to login: ${normalizedPath}`);
             return NextResponse.redirect(new URL("/organizer/login", request.url));
         }
         // If logged in as organizer and trying to access login/register
-        if (organizerId && (pathname === "/organizer/login" || pathname === "/organizer/register")) {
+        if (organizerId && (normalizedPath === "/organizer/login" || normalizedPath === "/organizer/register")) {
+            console.log(`[Proxy] Redirecting logged-in organizer to dashboard`);
             return NextResponse.redirect(new URL("/organizer/dashboard", request.url));
         }
         return NextResponse.next();
@@ -34,16 +41,20 @@ export function proxy(request: NextRequest) {
     // 2. Regular User Route Protection
     // If no userId and trying to access a protected path, redirect to login
     if (!userId && !isPublicPath) {
+        console.log(`[Proxy] Redirecting user to login: ${normalizedPath}`);
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
     // If userId exists and trying to access login/register, redirect to dashboard
-    if (userId && (pathname === "/login" || pathname === "/register")) {
+    if (userId && (normalizedPath === "/login" || normalizedPath === "/register")) {
+        console.log(`[Proxy] Redirecting logged-in user to dashboard`);
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     return NextResponse.next();
 }
+
+export default proxy;
 
 export const config = {
     matcher: [

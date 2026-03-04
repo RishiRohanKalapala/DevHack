@@ -125,7 +125,7 @@ export default function OrganizerLoginPage() {
                 <div className="text-center mt-8">
                     <p className="text-sm text-zinc-500 font-medium">
                         Need an admin account?{" "}
-                        <Link href="/organizer/register" className="text- rose-400 hover:text-rose-300 font-bold transition-colors">
+                        <Link href="/organizer/register" className="text-rose-400 hover:text-rose-300 font-bold transition-colors">
                             Apply here
                         </Link>
                     </p>
