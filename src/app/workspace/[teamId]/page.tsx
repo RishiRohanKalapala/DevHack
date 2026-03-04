@@ -272,7 +272,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                     {activeModule === "members" && <MembersModule team={team} copyInvite={copyInvite} copied={copied} />}
                     {activeModule === "problem-statements" && <ProblemStatementsModule teamId={teamId} initialProblems={team.problemStatements || []} />}
                     {activeModule === "browse-tools" && <BrowseToolsModule />}
-                    {activeModule === "llm" && <LLMModule />}
+                    {activeModule === "llm" && <LLMModule team={team} />}
                     {activeModule === "code-library" && <CodeLibraryModule />}
                 </div>
             </main>
@@ -1952,7 +1952,7 @@ function BrowseToolsModule() {
     );
 }
 
-function LLMModule() {
+function LLMModule({ team }: { team: any }) {
     const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -1971,7 +1971,10 @@ function LLMModule() {
             const res = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: textToSend })
+                body: JSON.stringify({
+                    message: textToSend,
+                    context: JSON.stringify(team)
+                })
             });
 
             if (!res.ok) throw new Error("Failed to get response");
@@ -2019,7 +2022,7 @@ function LLMModule() {
                                             fetch("/api/chat", {
                                                 method: "POST",
                                                 headers: { "Content-Type": "application/json" },
-                                                body: JSON.stringify({ message: p })
+                                                body: JSON.stringify({ message: p, context: JSON.stringify(team) })
                                             }).then(res => res.json()).then(data => {
                                                 setMessages(prev => [...prev, { role: 'user', content: p }, { role: 'assistant', content: data.text }]);
                                             });

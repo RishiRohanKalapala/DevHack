@@ -9,13 +9,17 @@ const model = genAI.getGenerativeModel({
 
 export async function POST(req: Request) {
     try {
-        const { message } = await req.json();
+        const { message, context } = await req.json();
 
         if (!message) {
             return NextResponse.json({ error: "Message is required" }, { status: 400 });
         }
 
-        const result = await model.generateContent(message);
+        const prompt = context
+            ? `WORKSPACE STATE CONTEXT (JSON of current project team, tasks, notes, members, problem statements, submission):\n${context}\n\nUSER PROMPT: ${message}`
+            : message;
+
+        const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
 
