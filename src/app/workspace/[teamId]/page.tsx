@@ -1035,13 +1035,15 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {team.members?.map((m: any, i: number) => (
-                    <div key={i} className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors rounded-xl flex flex-col items-center p-6 text-center group">
-                        <div className="w-16 h-16 rounded-full bg-[#121214] border border-[#3f3f46] flex items-center justify-center mb-4">
-                            <span className="font-bold text-xl text-zinc-100 uppercase">{m.user?.name?.[0] || "?"}</span>
+                    <div key={i} className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors rounded-xl flex items-center p-5 gap-4 group">
+                        <div className="w-14 h-14 rounded-xl bg-[#121214] border border-[#3f3f46] flex items-center justify-center shrink-0">
+                            <span className="font-bold text-lg text-zinc-100 uppercase">{m.user?.name?.[0] || "?"}</span>
                         </div>
-                        <p className="font-bold text-zinc-100 text-base">{m.user?.name}</p>
-                        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mt-1.5">{m.role}</p>
-                        <p className="text-zinc-500 text-xs mt-3">{m.user?.email}</p>
+                        <div className="flex flex-col text-left overflow-hidden">
+                            <p className="font-bold text-zinc-100 text-sm truncate">{m.user?.name}</p>
+                            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">{m.role}</p>
+                            <p className="text-zinc-400 text-xs mt-1 truncate">{m.user?.email}</p>
+                        </div>
                     </div>
                 ))}
             </div>
