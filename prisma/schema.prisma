@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     String
+  name         String
+  createdAt    DateTime      @default(now())
+  members      TeamMember[]
+  tasks        Task[]
+  joinRequests JoinRequest[]
+}
+
+model Team {
+  id            String        @id @default(cuid())
+  name          String
+  projectName   String
+  hackathonName String
+  description   String?
+  teamSize      Int           @default(1)
+  inviteCode    String        @unique
+  createdAt     DateTime      @default(now())
+  members       TeamMember[]
+  tasks         Task[]
+  resources     Resource[]
+  notes         Note[]
+  submission    Submission?
+  joinRequests  JoinRequest[]
+}
+
+model TeamMember {
+  id     String @id @default(cuid())
+  teamId String
+  userId String
+  role   Role   @default(MEMBER)
+  team   Team   @relation(fields: [teamId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([teamId, userId])
+}
+
+enum Role {
+  LEAD
+  MEMBER
+}
+
+model JoinRequest {
+  id        String        @id @default(cuid())
+  teamId    String
+  userId    String
+  status    RequestStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  team      Team          @relation(fields: [teamId], references: [id])
+  user      User          @relation(fields: [userId], references: [id])
+
+  @@unique([teamId, userId])
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+
+model Task {
+  id          String     @id @default(cuid())
+  teamId      String
+  title       String
+  description String?
+  assignedTo  String?
+  status      TaskStatus @default(BACKLOG)
+  team        Team       @relation(fields: [teamId], references: [id])
+  user        User?      @relation(fields: [assignedTo], references: [id])
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model Resource {
+  id     String @id @default(cuid())
+  teamId String
+  title  String
+  url    String
+  team   Team   @relation(fields: [teamId], references: [id])
+}
+
+model Note {
+  id      String @id @default(cuid())
+  teamId  String
+  title   String
+  content String
+  team    Team   @relation(fields: [teamId], references: [id])
+}
+
+model Submission {
+  id               String  @id @default(cuid())
+  teamId           String  @unique
+  problemStatement String?
+  solution         String?
+  techStack        String?
+  videoUrl         String?
+  deckUrl          String?
+  team             Team    @relation(fields: [teamId], references: [id])
+}
+

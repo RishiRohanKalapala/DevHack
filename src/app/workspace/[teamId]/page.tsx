@@ -1,0 +1,543 @@
+"use client";
+
+import { useEffect, useState, use } from "react";
+import {
+    Layout,
+    CheckSquare,
+    Link as LinkIcon,
+    FileText,
+    Globe,
+    Users,
+    Settings,
+    Plus,
+    MoreVertical,
+    Github,
+    Figma,
+    ExternalLink,
+    ChevronRight,
+    ClipboardList,
+    MessageSquare,
+    Search,
+    Bell,
+    Search as SearchIcon,
+    Copy,
+    Check,
+    Zap,
+    Trash2,
+    Calendar,
+    Clock,
+    Rocket,
+    Loader2
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+const MODULES = [
+    { id: "overview", label: "Overview", icon: <Layout className="w-4 h-4" /> },
+    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-4 h-4" /> },
+    { id: "resources", label: "Resources", icon: <LinkIcon className="w-4 h-4" /> },
+    { id: "notes", label: "Notes", icon: <FileText className="w-4 h-4" /> },
+    { id: "submission", label: "Submission", icon: <Globe className="w-4 h-4" /> },
+    { id: "members", label: "Members", icon: <Users className="w-4 h-4" /> },
+];
+
+export default function WorkspacePage({ params: paramsPromise }: { params: Promise<{ teamId: string }> }) {
+    const params = use(paramsPromise);
+    const teamId = params.teamId;
+
+    const [team, setTeam] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeModule, setActiveModule] = useState("overview");
+    const [copied, setCopied] = useState(false);
+
+    useEffect(() => {
+        const fetchTeam = async () => {
+            try {
+                const res = await fetch(`/api/teams/${teamId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setTeam(data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch team data");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchTeam();
+    }, [teamId]);
+
+    const copyInvite = () => {
+        if (team?.inviteCode) {
+            navigator.clipboard.writeText(`${window.location.origin}/join/${team.inviteCode}`);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center text-white">
+                <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+            </div>
+        );
+    }
+
+    if (!team) {
+        return (
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white space-y-4">
+                <h2 className="text-2xl font-bold">Team not found</h2>
+                <Button onClick={() => window.location.href = '/dashboard'}>Go to Dashboard</Button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-[#09090b] text-white flex selection:bg-indigo-500/30">
+            {/* Sidebar */}
+            <aside className="w-64 border-r border-white/5 bg-black flex flex-col fixed inset-y-0 z-50 transition-all">
+                <div className="p-6">
+                    <div className="flex items-center gap-3 px-2 mb-8">
+                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/30">D</div>
+                        <div className="overflow-hidden">
+                            <p className="font-bold text-sm truncate uppercase tracking-tight">{team.name}</p>
+                            <p className="text-[10px] text-zinc-500 truncate font-mono tracking-widest">v1.0.0</p>
+                        </div>
+                    </div>
+
+                    <nav className="space-y-1">
+                        {MODULES.map((mod) => (
+                            <button
+                                key={mod.id}
+                                onClick={() => setActiveModule(mod.id)}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${activeModule === mod.id
+                                    ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/10"
+                                    : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900"
+                                    }`}
+                            >
+                                {mod.icon}
+                                <span className="text-sm font-semibold">{mod.label}</span>
+                                {activeModule === mod.id && <div className="ml-auto w-1 h-4 bg-white rounded-full" />}
+                            </button>
+                        ))}
+                    </nav>
+                </div>
+
+                <div className="mt-auto p-6 space-y-4 border-t border-white/5 bg-zinc-950/40">
+                    <button onClick={copyInvite} className="w-full flex items-center justify-between px-4 py-3 bg-zinc-900 rounded-xl border border-zinc-800 hover:border-indigo-500/30 transition-all text-left">
+                        <div className="space-y-0.5">
+                            <p className="text-[10px] uppercase font-bold text-zinc-600 tracking-wider">Invite Code</p>
+                            <p className="text-xs font-mono text-zinc-300">{team.inviteCode}</p>
+                        </div>
+                        {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-zinc-500" />}
+                    </button>
+                    <button className="flex items-center gap-3 px-4 py-2 w-full text-zinc-500 hover:text-rose-400 text-sm transition-colors">
+                        <Trash2 className="w-4 h-4" /> Leave Team
+                    </button>
+                </div>
+            </aside>
+
+            {/* Main Area */}
+            <main className="flex-1 ml-64 min-h-screen bg-[#09090b]">
+                {/* Top Header */}
+                <header className="h-16 border-b border-white/5 px-8 flex items-center justify-between bg-black/40 backdrop-blur-xl sticky top-0 z-40">
+                    <div className="flex items-center gap-2">
+                        <span className="text-zinc-500 text-sm font-medium">Workspace</span>
+                        <ChevronRight className="w-4 h-4 text-zinc-700" />
+                        <span className="text-white text-sm font-bold uppercase tracking-widest">{activeModule}</span>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                        <div className="relative group hidden md:block">
+                            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-400 transition-colors" />
+                            <Input className="w-64 bg-zinc-900/50 border-zinc-800 focus:border-indigo-500 pl-10 h-9 rounded-full text-xs" placeholder="Search team assets..." />
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button className="relative text-zinc-400 hover:text-white transition-colors">
+                                <Bell className="w-5 h-5" />
+                                <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full border-2 border-[#09090b]" />
+                            </button>
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-[1px]">
+                                <div className="w-full h-full rounded-full bg-black flex items-center justify-center font-bold text-[10px]">JD</div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                {/* Content Modules */}
+                <div className="p-8">
+                    {activeModule === "overview" && <OverviewModule team={team} setActiveModule={setActiveModule} />}
+                    {activeModule === "tasks" && <TasksModule tasks={team.tasks} />}
+                    {activeModule === "resources" && <ResourcesModule resources={team.resources} />}
+                    {activeModule === "notes" && <NotesModule notes={team.notes} />}
+                    {activeModule === "submission" && <SubmissionModule submission={team.submission} />}
+                    {activeModule === "members" && <MembersModule team={team} copyInvite={copyInvite} copied={copied} />}
+
+                </div>
+            </main>
+        </div>
+    );
+}
+
+/* Modules */
+
+function OverviewModule({ team, setActiveModule }: { team: any, setActiveModule: (m: string) => void }) {
+    return (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 space-y-8">
+                    <div className="space-y-4">
+                        <h2 className="text-4xl font-bold tracking-tight">{team.projectName}</h2>
+                        <p className="text-zinc-500 text-lg leading-relaxed max-w-2xl">
+                            {team.description || "No description provided."}
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="cursor-pointer" onClick={() => setActiveModule("submission")}>
+                            <StatsCard icon={<Zap className="w-5 h-5 text-amber-400" />} label="Hackathon" value={team.hackathonName} />
+                        </div>
+                        <div className="cursor-pointer" onClick={() => setActiveModule("tasks")}>
+                            <StatsCard icon={<Clock className="w-5 h-5 text-emerald-400" />} label="Status" value="Planning Phase" />
+                        </div>
+                    </div>
+
+                    <Card className="bg-zinc-900/30 border-zinc-800/50 cursor-pointer hover:bg-zinc-900/50 transition-all group" onClick={() => setActiveModule("tasks")}>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="text-sm font-bold uppercase tracking-widest text-zinc-400">Project Progress</CardTitle>
+                            <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs font-mono uppercase">
+                                    <span className="text-zinc-500">Tasks Complete</span>
+                                    <span className="text-emerald-400">0%</span>
+                                </div>
+                                <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
+                                    <div className="h-full w-[0%] bg-emerald-500 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-1000" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <div className="space-y-6">
+                    <Card className="bg-indigo-600/5 border-indigo-600/20 rounded-3xl overflow-hidden shadow-2xl shadow-indigo-600/5 cursor-pointer hover:bg-indigo-600/10 transition-all group" onClick={() => setActiveModule("members")}>
+                        <CardHeader className="bg-indigo-600/10 p-6 border-b border-indigo-600/10 flex flex-row items-center justify-between">
+                            <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400 uppercase tracking-widest">Team Stats</CardTitle>
+                            <ChevronRight className="w-4 h-4 text-indigo-500 group-hover:translate-x-1 transition-transform" />
+                        </CardHeader>
+                        <CardContent className="p-6 space-y-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-indigo-600/20 flex items-center justify-center">
+                                    <Users className="w-5 h-5 text-indigo-400" />
+                                </div>
+                                <div>
+                                    <p className="text-white font-bold">{team._count?.members || 1} Members</p>
+                                    <p className="text-zinc-500 text-xs mt-0.5">Capacity: {team.teamSize} members</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+function TasksModule({ tasks }: { tasks: any[] }) {
+    const columns = ["Backlog", "To Do", "In Progress", "Done"];
+
+    return (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Kanban Board</h2>
+                <Button className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
+                    <Plus className="w-4 h-4" /> Add Task
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                {columns.map(col => (
+                    <div key={col} className="space-y-4">
+                        <div className="flex items-center justify-between px-2">
+                            <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">{col}</h3>
+                            <span className="text-[10px] bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded text-zinc-500 uppercase font-mono">
+                                {tasks?.filter(t => t.status.toLowerCase() === col.toLowerCase().replace(" ", "_")).length || 0}
+                            </span>
+                        </div>
+
+                        <div className="space-y-3 min-h-[500px] border-2 border-dashed border-zinc-900/50 rounded-2xl p-2 bg-black/20">
+                            {tasks?.filter(t => t.status.toLowerCase() === col.toLowerCase().replace(" ", "_")).map((task, i) => (
+                                <div key={i} className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all cursor-grab active:cursor-grabbing group">
+                                    <p className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors capitalize">{task.title}</p>
+                                    <div className="flex items-center justify-between mt-4">
+                                        <span className="w-6 h-6 rounded-full bg-zinc-800 text-[10px] flex items-center justify-center font-bold border border-zinc-700">?</span>
+                                        <MoreVertical className="w-4 h-4 text-zinc-600" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function ResourcesModule({ resources }: { resources: any[] }) {
+    return (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Team Resources</h2>
+                <Button className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
+                    <Plus className="w-4 h-4" /> Add Link
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {resources?.map((res, i) => (
+                    <Card key={i} className="bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/60 transition-all group overflow-hidden">
+                        <CardContent className="p-6 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center group-hover:bg-indigo-600/20 group-hover:text-indigo-400 transition-all">
+                                    <LinkIcon className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-zinc-200">{res.title}</p>
+                                    <p className="text-xs text-zinc-600 font-mono mt-0.5">{res.url}</p>
+                                </div>
+                            </div>
+                            <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+                        </CardContent>
+                    </Card>
+                ))}
+                {(!resources || resources.length === 0) && (
+                    <div className="col-span-full py-20 text-center border-2 border-dashed border-zinc-800 rounded-3xl">
+                        <p className="text-zinc-500 font-medium">No resources added yet.</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function NotesModule({ notes }: { notes: any[] }) {
+    return (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Project Notes</h2>
+                <Button className="bg-indigo-600 hover:bg-indigo-500 rounded-xl flex items-center gap-2">
+                    <Plus className="w-4 h-4" /> New Note
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div className="lg:col-span-1 space-y-2">
+                    {notes?.map((note, i) => (
+                        <SidebarNote key={i} title={note.title} date="Recently" active={i === 0} />
+                    ))}
+                    {(!notes || notes.length === 0) && <p className="text-zinc-600 text-sm p-4">No notes created.</p>}
+                </div>
+                <div className="lg:col-span-3">
+                    <Card className="bg-zinc-900/20 border-zinc-800 min-h-[500px] rounded-3xl p-8 space-y-6">
+                        {notes && notes.length > 0 ? (
+                            <>
+                                <div className="space-y-2 border-b border-zinc-800 pb-6">
+                                    <h3 className="text-3xl font-bold">{notes[0].title}</h3>
+                                    <div className="flex items-center gap-3 text-zinc-500 text-xs">
+                                        <span className="bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">Draft</span>
+                                    </div>
+                                </div>
+                                <div className="prose prose-invert max-w-none text-zinc-400 leading-relaxed whitespace-pre-wrap">
+                                    {notes[0].content}
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex items-center justify-center min-h-[400px] text-zinc-600">
+                                Select a note or create a new one.
+                            </div>
+                        )}
+                    </Card>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function SubmissionModule({ submission }: { submission: any }) {
+    return (
+        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tight">Submission Builder</h2>
+                <p className="text-zinc-500 text-lg">Build weights for your project's final profile.</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6">
+                <InputGroup label="Problem Statement" value={submission?.problemStatement} />
+                <InputGroup label="Our Solution" value={submission?.solution} />
+                <div className="grid grid-cols-2 gap-6">
+                    <InputGroup label="GitHub Repository" value={submission?.team?.resources?.[0]?.url} />
+                    <InputGroup label="Demo Video URL" value={submission?.videoUrl} />
+                </div>
+                <Button className="w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-2xl shadow-indigo-600/20 text-lg flex items-center gap-2">
+                    <Rocket className="w-5 h-5" /> Generate Final Profile
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, copyInvite: () => void, copied: boolean }) {
+    const [team, setTeam] = useState(initialTeam);
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    const handleRequest = async (requestId: string, action: "APPROVE" | "REJECT") => {
+        setIsUpdating(true);
+        try {
+            const res = await fetch(`/api/requests/${requestId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action })
+            });
+            if (res.ok) {
+                // Refresh team data
+                const updatedRes = await fetch(`/api/teams/${team.id}`);
+                if (updatedRes.ok) {
+                    const updatedData = await updatedRes.json();
+                    setTeam(updatedData);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    return (
+        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Pending Requests Section */}
+            {team.joinRequests?.length > 0 && (
+                <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                        <h2 className="text-xl font-bold uppercase tracking-widest text-amber-500">Pending Requests</h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {team.joinRequests.map((req: any) => (
+                            <Card key={req.id} className="bg-amber-500/5 border-amber-500/20 rounded-2xl overflow-hidden backdrop-blur-sm">
+                                <CardContent className="p-6 flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-amber-500">
+                                            {req.user?.name?.[0]}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-white">{req.user?.name}</p>
+                                            <p className="text-xs text-zinc-500">{req.user?.email}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            size="sm"
+                                            onClick={() => handleRequest(req.id, "APPROVE")}
+                                            disabled={isUpdating}
+                                            className="bg-emerald-600 hover:bg-emerald-500 rounded-lg h-8 px-4 text-xs"
+                                        >
+                                            Approve
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => handleRequest(req.id, "REJECT")}
+                                            disabled={isUpdating}
+                                            className="border-zinc-800 hover:bg-rose-500/10 hover:text-rose-500 rounded-lg h-8 px-4 text-xs"
+                                        >
+                                            Reject
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <h2 className="text-3xl font-bold">Team Members</h2>
+                    <p className="text-zinc-500 mt-1">Manage collaborators and roles for this project.</p>
+                </div>
+                <Button onClick={copyInvite} className="bg-white text-black hover:bg-zinc-200 rounded-2xl flex items-center gap-2 px-6 h-12 font-bold shadow-xl shadow-white/10">
+                    {copied ? <Check className="w-4 h-4" /> : <LinkIcon className="w-4 h-4" />}
+                    {copied ? "Copied Link" : "Invite Members"}
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {team.members?.map((m: any, i: number) => (
+                    <Card key={i} className="bg-zinc-900/30 border-zinc-800 hover:bg-zinc-900/60 transition-all rounded-3xl group overflow-hidden">
+                        <CardContent className="p-8">
+                            <div className="flex flex-col items-center text-center space-y-4">
+                                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-0.5">
+                                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center font-bold text-2xl group-hover:text-indigo-400 transition-colors">
+                                        {m.user?.name?.[0] || "?"}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-xl font-bold text-white uppercase tracking-tight">{m.user?.name}</p>
+                                    <p className="text-sm font-semibold text-indigo-400 uppercase tracking-widest text-[10px] mt-1">{m.role}</p>
+                                </div>
+                                <p className="text-zinc-600 font-mono text-xs">{m.user?.email}</p>
+                            </div>
+                        </CardContent>
+                        <CardFooter className="p-4 bg-zinc-900/20 border-t border-zinc-800/50 justify-center flex items-center gap-4">
+                            <button className="text-zinc-500 hover:text-white transition-colors"><MessageSquare className="w-4 h-4" /></button>
+                            <button className="text-zinc-500 hover:text-white transition-colors"><Settings className="w-4 h-4" /></button>
+                        </CardFooter>
+                    </Card>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+
+/* Helpers */
+
+function StatsCard({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) {
+    return (
+        <div className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-zinc-950 flex items-center justify-center border border-zinc-800/50">
+                {icon}
+            </div>
+            <div>
+                <p className="text-[10px] uppercase font-bold text-zinc-600 tracking-widest">{label}</p>
+                <p className="text-white font-bold tracking-tight">{value}</p>
+            </div>
+        </div>
+    );
+}
+
+function SidebarNote({ title, date, active = false }: { title: string, date: string, active?: boolean }) {
+    return (
+        <button className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all ${active ? "bg-indigo-600/10 border border-indigo-600/30 text-white" : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50"
+            }`}>
+            <span className="text-sm font-bold truncate pr-4">{title}</span>
+            <span className="text-[10px] font-mono text-zinc-600">{date}</span>
+        </button>
+    )
+}
+
+function InputGroup({ label, value }: { label: string, value?: string }) {
+    return (
+        <div className="space-y-2">
+            <label className="text-sm font-semibold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                {label}
+            </label>
+            <Input defaultValue={value} className="bg-zinc-900/30 border-zinc-800 h-14 rounded-2xl px-6 focus:border-indigo-500 text-zinc-300" />
+        </div>
+    );
+}
