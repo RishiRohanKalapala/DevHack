@@ -147,7 +147,7 @@ export default function RegisterPage() {
                                 type="button"
                                 variant="outline"
                                 onClick={handleGoogleSignIn}
-                                className="w-full h-11 bg-transparent border-white/5 hover:bg-white/5 text-white rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-3"
+                                className="w-full h-11 bg-white hover:bg-zinc-200 text-black border-none rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-3 shadow-lg shadow-white/5"
                             >
                                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                                     <path
