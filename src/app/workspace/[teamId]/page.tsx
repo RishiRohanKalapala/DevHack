@@ -838,6 +838,33 @@ function ProblemStatementsModule({ teamId, initialProblems }: { teamId: string, 
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("relevance");
 
+    const [analyses, setAnalyses] = useState<Record<string, string>>({});
+    const [analyzingIds, setAnalyzingIds] = useState<Set<string>>(new Set());
+
+    const analyzeProblem = async (problem: any) => {
+        setAnalyzingIds(prev => new Set(prev).add(problem.id));
+        try {
+            const prompt = `Analyze this hackathon problem statement in extreme detail. Extract core themes, suggest a modern tech stack, list 3 potential technical roadblocks, and outline a high-level solution architecture.\nTitle: ${problem.title}\nDescription: ${problem.description}`;
+            const res = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: prompt })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setAnalyses(prev => ({ ...prev, [problem.id]: data.text }));
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setAnalyzingIds(prev => {
+                const next = new Set(prev);
+                next.delete(problem.id);
+                return next;
+            });
+        }
+    };
+
     const fetchScraped = async () => {
         setIsScraping(true);
         setShowScraped(true);
@@ -1133,7 +1160,30 @@ function ProblemStatementsModule({ teamId, initialProblems }: { teamId: string, 
                             </p>
                         </div>
 
-                        <div className="pt-4 flex items-center justify-between gap-2 border-t border-white/5">
+                        <div className="pt-2 flex justify-start">
+                            <button
+                                onClick={() => analyzeProblem(problem)}
+                                disabled={analyzingIds.has(problem.id)}
+                                className="flex items-center text-[10px] h-7 px-3 bg-violet-500/10 border border-violet-500/20 font-bold uppercase tracking-widest text-violet-400 rounded-lg hover:text-white hover:bg-violet-500/30 transition-all disabled:opacity-50"
+                            >
+                                {analyzingIds.has(problem.id) ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <Sparkles className="w-3 h-3 mr-1.5" />}
+                                {analyses[problem.id] ? "Re-Analyze" : "AI Deep Extract"}
+                            </button>
+                        </div>
+
+                        {analyses[problem.id] && (
+                            <div className="mt-4 p-5 rounded-xl bg-[#121214] border border-violet-500/20 shadow-[0_0_15px_rgba(139,92,246,0.05)]">
+                                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-white/5">
+                                    <Bot className="w-4 h-4 text-violet-400" />
+                                    <span className="text-[10px] font-bold text-violet-400 uppercase tracking-widest">AI Extraction Complete</span>
+                                </div>
+                                <div className="prose prose-invert prose-sm max-w-none text-zinc-300">
+                                    <ReactMarkdown>{analyses[problem.id]}</ReactMarkdown>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="pt-4 flex items-center justify-between gap-2 border-t border-white/5 mt-auto">
                             <select
                                 value={problem.status}
                                 onChange={(e) => updateStatus(problem.id, e.target.value)}
