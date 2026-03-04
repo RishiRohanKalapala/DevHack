@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Loader2, Key } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,8 @@ export default function OrganizerLoginPage() {
                 const data = await res.json();
                 setError(data.message || "Invalid credentials");
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
+            console.error("Login error:", err);
             setError("Failed to connect to server");
         } finally {
             setIsLoading(false);
@@ -46,10 +48,13 @@ export default function OrganizerLoginPage() {
             {/* Logo at top left */}
             <div className="absolute top-8 left-8 z-50">
                 <Link href="/" className="transition-transform hover:scale-105 duration-300">
-                    <img
+                    <Image
                         src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
                         alt="DevHack Logo"
+                        width={150}
+                        height={64}
                         className="h-16 w-auto object-contain"
+                        priority
                     />
                 </Link>
             </div>
