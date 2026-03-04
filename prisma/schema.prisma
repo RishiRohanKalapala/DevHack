@@ -15,15 +15,17 @@ datasource db {
 
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  password     String?
-  name         String
-  createdAt    DateTime      @default(now())
-  members      TeamMember[]
-  tasks        Task[]
-  problemStatements ProblemStatement[]
-  joinRequests JoinRequest[]
+  id                   String             @id @default(cuid())
+  email                String             @unique
+  password             String?
+  name                 String
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
+  createdAt            DateTime           @default(now())
+  members              TeamMember[]
+  tasks                Task[]
+  problemStatements    ProblemStatement[]
+  joinRequests         JoinRequest[]
 }
 
 model Team {

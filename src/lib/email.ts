@@ -135,4 +135,80 @@ export async function sendInviteEmail(
   }
 }
 
+export async function sendPasswordResetEmail(
+  toEmail: string,
+  resetToken: string,
+  userName: string
+) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
+  const fromEmail = process.env.GMAIL_USER;
+
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    console.error("ERROR: GMAIL credentials missing. Emails cannot be sent.");
+    return { success: false, error: new Error("GMAIL_USER or GMAIL_APP_PASSWORD missing") };
+  }
+
+  try {
+    const mailOptions = {
+      from: `"DevHack" <${fromEmail}>`,
+      to: toEmail,
+      subject: `Reset your DevHack password`,
+      html: `
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevHack Password Reset</title>
+  <style>
+    body { margin: 0; padding: 0; background-color: #09090b; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; }
+    .main-table { width: 100%; max-width: 560px; margin: 40px auto; background-color: #111113; border: 1px solid #27272a; border-radius: 16px; overflow: hidden; }
+    .content-cell { padding: 40px 32px; text-align: center; }
+    h1 { font-size: 24px; font-weight: 800; color: #ffffff; margin: 0 0 16px; }
+    p { font-size: 14px; color: #71717a; line-height: 1.6; margin: 0 0 24px; }
+    .btn { display: inline-block; padding: 14px 28px; background-color: #4f46e5; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; margin-bottom: 32px; }
+    .footer { padding: 24px; background-color: #0c0c0e; border-top: 1px solid #27272a; text-align: center; font-size: 11px; color: #3f3f46; }
+  </style>
+</head>
+<body>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center" style="padding: 20px;">
+        <table class="main-table" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center" style="background-color: #000000; padding: 24px; border-bottom: 1px solid #27272a;">
+              <img src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png" width="140" alt="DevHack Logo">
+            </td>
+          </tr>
+          <tr>
+            <td class="content-cell">
+              <h1>Password Reset Request</h1>
+              <p>Hello ${userName},<br/><br/>We received a request to reset the password for your DevHack account. Click the button below to choose a new password. This link will expire in 1 hour.</p>
+              <a href="${resetLink}" class="btn">Reset Password</a>
+              <p style="font-size: 12px; margin-bottom: 0;">If you didn't request this, you can safely ignore this email.</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="footer">
+              © ${new Date().getFullYear()} DevHack. All rights reserved.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    return { success: true, data: info };
+  } catch (error) {
+    console.error("Password reset email error:", error);
+    return { success: false, error };
+  }
+}
+
 export { generateProfessionalCode };
