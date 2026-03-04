@@ -2,112 +2,107 @@
   <img src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png" width="280" alt="DevHack Logo">
 </p>
 
-<h1 align="center">DevHack</h1>
+<h1 align="center">DevHack v2.0</h1>
 
 <p align="center">
-  The Complete Vibe Coding Ecosystem for Hackathon Teams
+  <strong>The Ultimate Agentic Ecosystem for High-Performance Hackathon Teams</strong>
 </p>
 
 <p align="center">
   <a href="#overview">Overview</a> | 
+  <a href="#innovations">Innovations</a> | 
   <a href="#technical-stack">Technical Stack</a> | 
   <a href="#key-modules">Key Modules</a> | 
-  <a href="#installation">Installation</a> | 
-  <a href="#deployment">Deployment</a>
+  <a href="#setup">Setup</a>
 </p>
 
 ---
 
 ## Overview
 
-DevHack is a unified collaborative workspace designed specifically for hackathon participants. It bridges the gap between ideation and submission by providing a high-density environment to manage tasks, resources, and technical documentation in real-time. The platform focuses on a premium developer experience with a focus on efficiency during high-pressure coding sessions.
+**DevHack v2** is a revolutionary collaborative workspace engineered for the modern hackathon era. It transforms the chaotic high-pressure environment of a hackathon into a streamlined, high-density innovation hub. By integrating autonomous agentic intelligence with robust project management, DevHack v2 enables teams to transition from raw ideation to production-ready submissions with unparalleled speed.
+
+## Innovations in v2
+
+- **Next-Gen Architecture**: Migrated to **Next.js 16** and **React 19** for cutting-edge performance and developer experience.
+- **Agentic Intelligence**: Integrated **Antigravity AI** capabilities for autonomous debugging, documentation generation, and problem analysis.
+- **Enhanced Reliability**: Comprehensive linting and type-safety optimizations across the entire stack.
+- **Modernized Middleware**: Implementation of the new **Proxy** convention for secure, high-performance request handling.
 
 ## Technical Stack
 
 | Category | Technology |
 | :--- | :--- |
 | **Framework** | Next.js 16 (App Router) |
+| **Edge Logic** | Next.js Proxy (v16) |
 | **Language** | TypeScript |
-| **Library** | React 19 |
+| **Library** | React 19 (Stable) |
 | **Styling** | Tailwind CSS 4 |
-| **State Management** | Zustand |
-| **Markdown** | React Markdown / Rehype Highlight |
+| **State** | Zustand |
+| **Intelligence** | Antigravity Agentic AI |
 
 | Infrastructure | Tool |
 | :--- | :--- |
-| **Runtime** | Node.js |
-| **ORM** | Prisma |
+| **Runtime** | Node.js 20+ |
+| **ORM** | Prisma / query-compiler-fast |
+| **Cache** | Redis (ioredis) |
 | **Database** | PostgreSQL |
 | **Auth** | NextAuth.js |
-| **Email** | Resend |
-| **API** | Axios |
-
-| Development | Utility |
-| :--- | :--- |
-| **Package Manager** | npm |
-| **Linting** | ESLint |
-| **Styling Utils** | clsx / tailwind-merge |
-| **Icons** | Lucide React |
 
 ## Key Modules
 
-### Workspace Management
-A centralized dashboard for team leads to initialize projects, manage member access through invite codes, and track overall progress through high-level statistics.
+### 🚀 Agentic Problem Discovery
+Search and curate global problem statements from major events (SIH 2025, etc.) using automated scraping and AI categorization.
 
-### Kanban Task System
-A specialized task board designed for rapid iteration. It supports lifecycle stages from backlog to completion, optimized for the typical 24-48 hour hackathon window.
+### 🛡️ Secure Workspace Hub
+High-density project management with invite-only access, team statistics, and centralized resource management.
 
-### Problem Discovery
-A curated library of global problem statements, including real-time scrapers for events like SIH 2025, enabling teams to align their builds with verified challenges.
+### 📋 Rapid-Iterate Kanban
+A specialized task board designed for 24-48 hour sprints, featuring real-time status syncing and priority management.
 
-### Code Library and Resource Hub
-An exhaustive technical resource covering 75+ technology stacks. It includes documentation links for core languages, frontend frameworks, backend systems, and cloud infrastructure.
+### 📚 Polyglot Resource Library
+Exhaustive documentation and boilerplate hub for over **75+ technology stacks**, helping teams ship faster without leaving the environment.
 
-### LLM Intelligence
-An integrated AI co-pilot capable of debugging code, drafting documentation, and analyzing problem statements directly within the workspace environment.
-
-## Installation
+## Setup
 
 ### Prerequisites
-- Node.js 18.x or higher
-- PostgreSQL instance
+- Node.js 20.x or higher
+- PostgreSQL & Redis instances
 
 ### Setup Steps
 
-1. Clone the repository
+1. **Clone the Repository**
 ```bash
-git clone https://github.com/ckr-redlinedatavault/DevHack.git
+git clone https://github.com/ckr-redlinedatavault/DevHack-v2.git
 cd devhack
 ```
 
-2. Install dependencies
+2. **Install Dependencies**
 ```bash
 npm install
 ```
 
-3. Configure environment variables
-Create a .env file and include:
+3. **Configure Environment**
+Create a `.env` file with the following keys:
 ```env
 DATABASE_URL="postgresql://..."
+REDIS_URL="redis://..."
 NEXTAUTH_SECRET="..."
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
-RESEND_API_KEY="..."
 ```
 
-4. Initialize the database
+4. **Initialize System**
 ```bash
 npx prisma db push
+npm run build
 ```
 
-5. Run the development server
+5. **Start Innovation**
 ```bash
 npm run dev
 ```
 
-## Deployment
-
-The application is optimized for deployment on the Vercel platform.
-
-1. Ensure all environment variables are configured in the Vercel dashboard.
-2. The post-install script will automatically handle Prisma client generation.
-3. Build and deploy through the Vercel CLI or Git integration.
+---
+<p align="center">
+  Built with ❤️ by the DevHack Team
+</p>
