@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Loader2, ArrowRight, ShieldCheck, Mail, Lock, User } from "lucide-react";
+import { Loader2, Mail, Lock, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { signIn } from "next-auth/react";
 
@@ -39,6 +39,7 @@ export default function RegisterPage() {
                 setError(data.message || "Something went wrong");
             }
         } catch (err: unknown) {
+            console.error("Registration failed:", err);
             setError("Failed to connected to server");
         } finally {
             setIsLoading(false);
@@ -54,10 +55,13 @@ export default function RegisterPage() {
             {/* Logo at top left */}
             <div className="absolute top-8 left-8 z-50">
                 <Link href="/" className="transition-transform hover:scale-105 duration-300">
-                    <img
+                    <Image
                         src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
                         alt="DevHack Logo"
+                        width={150}
+                        height={64}
                         className="h-16 w-auto object-contain"
+                        priority
                     />
                 </Link>
             </div>

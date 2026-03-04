@@ -32,7 +32,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ teamId:
     return NextResponse.json(problem, { status: 201 });
 }
 
-export async function PATCH(req: Request, { params }: { params: Promise<{ teamId: string }> }) {
+export async function PATCH(req: Request) {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     const { id, title, description, status } = await req.json();
@@ -48,7 +48,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ teamId
     return NextResponse.json(problem);
 }
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ teamId: string }> }) {
+export async function DELETE(req: Request) {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     const { id } = await req.json();

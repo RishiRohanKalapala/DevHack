@@ -55,7 +55,7 @@ export default async function EventDashboard({ params }: { params: Promise<{ eve
                 {stats.map((stat, i) => (
                     <div key={i} className="bg-zinc-950 border border-white/5 p-6 rounded-2xl flex flex-col gap-3 group hover:border-white/10 transition-all">
                         <div className={`w-10 h-10 ${stat.bg} rounded-xl flex items-center justify-center transition-colors group-hover:bg-rose-500/10`}>
-                            < stat.icon className={`w-4 h-4 ${stat.color} group-hover:text-rose-500 transition-colors`} />
+                            <stat.icon className={`w-4 h-4 ${stat.color} group-hover:text-rose-500 transition-colors`} />
                         </div>
                         <div>
                             <p className="text-zinc-500 text-[11px] font-bold leading-none mb-2">{stat.label}</p>

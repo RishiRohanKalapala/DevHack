@@ -944,7 +944,7 @@ function ProblemStatementsModule({ teamId, initialProblems }: { teamId: string, 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="space-y-1">
                     <h2 className="text-2xl font-bold">Problem Statements</h2>
-                    <p className="text-zinc-500 text-sm mt-1">Define the core challenges you're tackling in this project.</p>
+                    <p className="text-zinc-500 text-sm mt-1">Define the core challenges you&apos;re tackling in this project.</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button
@@ -1074,7 +1074,7 @@ function ProblemStatementsModule({ teamId, initialProblems }: { teamId: string, 
                     {filteredScraped.length === 0 && !isScraping && (
                         <div className="py-20 flex flex-col items-center justify-center text-center">
                             <SearchIcon className="w-8 h-8 text-zinc-700 mb-3" />
-                            <p className="text-zinc-500 font-medium">No results found for "{searchQuery}"</p>
+                            <p className="text-zinc-500 font-medium">No results found for &quot;{searchQuery}&quot;</p>
                             <p className="text-zinc-700 text-xs mt-1">Try searching by organization or theme instead.</p>
                         </div>
                     )}

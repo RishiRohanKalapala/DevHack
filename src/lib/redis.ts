@@ -32,16 +32,16 @@ export const getCachedData = async <T>(key: string): Promise<T | null> => {
     try {
         const data = await redis.get(key);
         return data ? JSON.parse(data) : null;
-    } catch (e) {
+    } catch {
         return null;
     }
 };
 
-export const setCachedData = async (key: string, data: any, ttlSecond: number = 60) => {
+export const setCachedData = async (key: string, data: unknown, ttlSecond: number = 60) => {
     if (!redis) return;
     try {
         await redis.set(key, JSON.stringify(data), "EX", ttlSecond);
-    } catch (e) {
+    } catch {
         // ignore
     }
 };
@@ -50,7 +50,7 @@ export const invalidateCache = async (key: string) => {
     if (!redis) return;
     try {
         await redis.del(key);
-    } catch (e) {
+    } catch {
         // ignore
     }
 };
