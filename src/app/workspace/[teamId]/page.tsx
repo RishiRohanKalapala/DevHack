@@ -29,7 +29,8 @@ import {
     Rocket,
     Loader2,
     ArrowRight,
-    Save
+    Save,
+    X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -567,6 +568,7 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
     const [draftTitle, setDraftTitle] = useState("");
     const [draftContent, setDraftContent] = useState("");
     const [isSaving, setIsSaving] = useState(false);
+    const [selectedNote, setSelectedNote] = useState<any>(null);
 
     const handleSave = async () => {
         if (!draftTitle.trim() && !draftContent.trim()) return;
@@ -605,6 +607,24 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
+            {selectedNote && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-[#121214] border border-[#27272a] rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="px-8 py-5 border-b border-[#27272a] flex items-center justify-between bg-[#18181b]">
+                            <h3 className="text-xl font-bold text-white pr-8 truncate">{selectedNote.title}</h3>
+                            <button onClick={() => setSelectedNote(null)} className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors shrink-0">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="p-8 overflow-y-auto custom-scrollbar prose prose-invert prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-pre:p-4 prose-p:leading-relaxed max-w-none break-words">
+                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                                {selectedNote.content}
+                            </ReactMarkdown>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div>
                 <h2 className="text-2xl font-bold">Project Notes</h2>
                 <p className="text-zinc-500 text-sm mt-1">Jot down architecture decisions, meeting logs, or quick ideas.</p>
@@ -639,17 +659,22 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
             {/* Notes Grid Display */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {notes?.map((note) => (
-                    <div key={note.id} className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] rounded-xl flex flex-col group transition-all relative">
+                    <div
+                        key={note.id}
+                        onClick={() => setSelectedNote(note)}
+                        className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] cursor-pointer rounded-xl flex flex-col group transition-all relative h-48"
+                    >
                         <div className="p-6 flex-1 flex flex-col overflow-hidden">
-                            <h3 className="font-bold text-zinc-100 mb-3 truncate pr-8">{note.title}</h3>
-                            <div className="text-zinc-400 text-sm whitespace-pre-wrap leading-relaxed flex-1 overflow-y-auto custom-scrollbar prose prose-invert prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-pre:p-4 prose-p:leading-relaxed max-w-none break-words">
-                                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-                                    {note.content}
-                                </ReactMarkdown>
-                            </div>
+                            <h3 className="font-bold text-zinc-100 mb-2 truncate pr-8">{note.title}</h3>
+                            <p className="text-zinc-400 text-sm whitespace-pre-wrap leading-relaxed overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}>
+                                {note.content}
+                            </p>
                         </div>
                         <button
-                            onClick={() => deleteNote(note.id)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                deleteNote(note.id);
+                            }}
                             className="absolute top-5 right-5 w-8 h-8 rounded-lg bg-[#27272a] border border-[#3f3f46] flex items-center justify-center text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/20 opacity-0 group-hover:opacity-100 transition-all"
                         >
                             <Trash2 className="w-4 h-4" />
