@@ -1,4 +1,4 @@
-// Force Next.js to re-evaluate the generated Prisma client for new HackathonEvent schema updates
+// Force Next.js to re-evaluate the generated Prisma client for newest Timeline schema update
 import { PrismaClient } from "../generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";

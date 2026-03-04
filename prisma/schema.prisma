@@ -163,6 +163,7 @@ model HackathonEvent {
   endDate       DateTime?
   createdAt     DateTime            @default(now())
   registrations EventRegistration[]
+  timelines     TimelineEvent[]
 }
 
 model EventRegistration {
@@ -178,4 +179,13 @@ model EventRegistration {
 enum RegistrationStatus {
   PENDING
   INVITED
+}
+
+model TimelineEvent {
+  id        String         @id @default(cuid())
+  eventId   String
+  event     HackathonEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  title     String
+  time      DateTime
+  createdAt DateTime       @default(now())
 }

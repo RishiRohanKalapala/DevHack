@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import LiveEventTimer from "./LiveEventTimer";
+import LiveAnnouncements from "./LiveAnnouncements";
 import { Activity, ShieldCheck, Zap } from "lucide-react";
 
 export default async function LiveEventStatusPage({ params }: { params: Promise<{ eventId: string }> }) {
@@ -76,6 +77,9 @@ export default async function LiveEventStatusPage({ params }: { params: Promise<
                         <p className="text-zinc-500 text-sm font-medium">When the central timer reaches zero, the event submission gates will automatically close. Finalize early.</p>
                     </div>
                 </div>
+
+                {/* Real-time Notification Client Manager */}
+                <LiveAnnouncements eventId={event.id} />
             </main>
         </div>
     );

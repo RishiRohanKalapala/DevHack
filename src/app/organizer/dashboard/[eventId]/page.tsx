@@ -2,8 +2,9 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Mail, Users, CheckCircle2, Copy, ArrowRight } from "lucide-react";
+import { ArrowLeft, Mail, Users, CheckCircle2, Copy, ArrowRight, Clock } from "lucide-react";
 import InviteActions from "./InviteActions";
+import TimelineManager from "./TimelineManager";
 
 export default async function EventDashboard({ params }: { params: Promise<{ eventId: string }> }) {
     const { eventId } = await params;
@@ -16,7 +17,10 @@ export default async function EventDashboard({ params }: { params: Promise<{ eve
 
     const event = await prisma.hackathonEvent.findUnique({
         where: { id: eventId, organizerId },
-        include: { registrations: true },
+        include: {
+            registrations: true,
+            timelines: { orderBy: { time: 'asc' } }
+        },
     });
 
     if (!event) {
@@ -121,6 +125,11 @@ export default async function EventDashboard({ params }: { params: Promise<{ eve
                             )}
                         </div>
                     </div>
+                </div>
+
+                {/* Timeline Management Section */}
+                <div className="pt-12 border-t border-white/5">
+                    <TimelineManager eventId={event.id} existingTimelines={event.timelines} />
                 </div>
             </div>
         </div>
