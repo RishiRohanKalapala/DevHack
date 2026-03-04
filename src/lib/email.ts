@@ -1,6 +1,12 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
 function generateProfessionalCode(): string {
   const prefixes = ["DEV", "TEAM", "HACK"];
@@ -22,18 +28,16 @@ export async function sendInviteEmail(
 ) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
   const inviteLink = `${baseUrl}/join/${inviteCode}`;
-  const fromEmail = process.env.EMAIL_FROM || "DevHack <onboarding@resend.dev>";
+  const fromEmail = process.env.GMAIL_USER;
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error("ERROR: RESEND_API_KEY is missing. Emails cannot be sent.");
-    return { success: false, error: new Error("RESEND_API_KEY is missing") };
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    console.error("ERROR: GMAIL credentials missing. Emails cannot be sent.");
+    return { success: false, error: new Error("GMAIL_USER or GMAIL_APP_PASSWORD missing") };
   }
 
-  console.log(`Attempting to send email to ${toEmail} from ${fromEmail}`);
-
   try {
-    const data = await resend.emails.send({
-      from: fromEmail,
+    const mailOptions = {
+      from: `"DevHack" <${fromEmail}>`,
       to: toEmail,
       subject: `${senderName} invited you to join ${teamName} on DevHack`,
       html: `
@@ -109,11 +113,13 @@ export async function sendInviteEmail(
 </body>
 </html>
             `,
-    });
+    };
 
-    return { success: true, data };
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully via Gmail:", info.messageId);
+    return { success: true, data: info };
   } catch (error) {
-    console.error("Email send error:", error);
+    console.error("Gmail send error:", error);
     return { success: false, error };
   }
 }
