@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2, ArrowLeft, Rocket, Users, Trophy, ClipboardList, Send, ArrowRight, Zap } from "lucide-react";
+import { Loader2, ArrowLeft, Rocket, Users, Trophy, ClipboardList, Send, ArrowRight, Zap, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -95,11 +95,37 @@ export default function CreateTeamPage() {
                                         </div>
                                         <div className="space-y-3">
                                             <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
+                                                <Target className="w-4 h-4 text-rose-500" /> Project Title
+                                            </label>
+                                            <Input
+                                                name="projectName"
+                                                placeholder="My Innovation"
+                                                required
+                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
                                                 <Rocket className="w-4 h-4 text-white opacity-40" /> Hackathon target
                                             </label>
                                             <Input
                                                 name="hackathonName"
                                                 placeholder="Summit Event 2026"
+                                                required
+                                                className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
+                                            />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-xs font-bold text-zinc-600 ml-1 flex items-center gap-2">
+                                                <Users className="w-4 h-4 text-white opacity-40" /> Team size
+                                            </label>
+                                            <Input
+                                                name="teamSize"
+                                                type="number"
+                                                placeholder="4"
                                                 required
                                                 className="bg-black border-white/5 h-12 focus:border-rose-500/50 text-white rounded-xl placeholder:text-zinc-800 transition-all font-medium text-sm"
                                             />
