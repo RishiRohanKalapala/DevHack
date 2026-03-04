@@ -507,29 +507,43 @@ function ResourcesModule({ teamId, initialResources }: { teamId: string, initial
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {resources?.map((res) => (
-                    <div key={res.id} className="bg-[#121214] border border-[#27272a] hover:border-[#3f3f46] rounded-xl transition-all group overflow-hidden flex items-center justify-between p-4">
-                        <div className="flex items-center gap-4 overflow-hidden">
-                            <div className="w-10 h-10 shrink-0 rounded-lg bg-[#18181b] border border-[#27272a] flex items-center justify-center group-hover:bg-[#27272a] transition-all">
-                                <LinkIcon className="w-4 h-4 text-zinc-400 group-hover:text-zinc-200 transition-colors" />
+                {resources?.map((res) => {
+                    const colors = [
+                        { bg: "bg-emerald-500/10", border: "border-emerald-500/20", text: "text-emerald-500", hoverBg: "group-hover:bg-emerald-500/20" },
+                        { bg: "bg-violet-500/10", border: "border-violet-500/20", text: "text-violet-500", hoverBg: "group-hover:bg-violet-500/20" },
+                        { bg: "bg-amber-500/10", border: "border-amber-500/20", text: "text-amber-500", hoverBg: "group-hover:bg-amber-500/20" },
+                        { bg: "bg-cyan-500/10", border: "border-cyan-500/20", text: "text-cyan-500", hoverBg: "group-hover:bg-cyan-500/20" },
+                        { bg: "bg-rose-500/10", border: "border-rose-500/20", text: "text-rose-500", hoverBg: "group-hover:bg-rose-500/20" },
+                        { bg: "bg-sky-500/10", border: "border-sky-500/20", text: "text-sky-500", hoverBg: "group-hover:bg-sky-500/20" },
+                    ];
+                    // Deterministic color assignment based on title string
+                    const colorIndex = [...res.title].reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+                    const theme = colors[colorIndex];
+
+                    return (
+                        <div key={res.id} className="bg-[#121214] border border-[#27272a] hover:border-[#3f3f46] rounded-xl transition-all group overflow-hidden flex items-center justify-between p-4">
+                            <div className="flex items-center gap-4 overflow-hidden">
+                                <div className={`w-10 h-10 shrink-0 rounded-lg border flex items-center justify-center transition-all ${theme.bg} ${theme.border} ${theme.hoverBg}`}>
+                                    <LinkIcon className={`w-4 h-4 ${theme.text}`} />
+                                </div>
+                                <div className="overflow-hidden">
+                                    <p className="font-semibold text-zinc-200 text-sm truncate">{res.title}</p>
+                                    <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-500 hover:text-zinc-300 font-mono mt-0.5 truncate block transition-colors">
+                                        {res.url.replace(/^https?:\/\//, '')}
+                                    </a>
+                                </div>
                             </div>
-                            <div className="overflow-hidden">
-                                <p className="font-semibold text-zinc-200 text-sm truncate">{res.title}</p>
-                                <a href={res.url} target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-500 hover:text-zinc-300 font-mono mt-0.5 truncate block transition-colors">
-                                    {res.url.replace(/^https?:\/\//, '')}
+                            <div className="flex items-center gap-2 pl-4">
+                                <a href={res.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-600 hover:bg-[#18181b] hover:text-white transition-all opacity-0 group-hover:opacity-100">
+                                    <ExternalLink className="w-4 h-4" />
                                 </a>
+                                <button onClick={() => deleteResource(res.id)} className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-600 hover:bg-rose-500/10 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100">
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 pl-4">
-                            <a href={res.url} target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-600 hover:bg-[#18181b] hover:text-white transition-all opacity-0 group-hover:opacity-100">
-                                <ExternalLink className="w-4 h-4" />
-                            </a>
-                            <button onClick={() => deleteResource(res.id)} className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-600 hover:bg-rose-500/10 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100">
-                                <Trash2 className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
 
                 {(!resources || resources.length === 0) && (
                     <div className="col-span-full py-20 flex flex-col items-center justify-center border border-dashed border-[#27272a] bg-[#121214] rounded-2xl">
