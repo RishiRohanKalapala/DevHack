@@ -34,6 +34,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/atom-one-dark.css";
 
 const MODULES = [
     { id: "overview", label: "Overview", icon: <Layout className="w-4 h-4" /> },
@@ -622,7 +625,7 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
                     placeholder="Start writing your thoughts here..."
                 />
                 <div className="flex justify-between items-center px-6 py-4 border-t border-[#27272a] bg-[#18181b]/30 backdrop-blur-sm">
-                    <p className="text-xs text-zinc-600 font-mono hidden sm:block">Markdown is not supported yet.</p>
+                    <p className="text-xs text-zinc-500 font-mono hidden sm:block">📝 Markdown & Code Blocks Supported</p>
                     <Button
                         onClick={handleSave}
                         disabled={isSaving || (!draftTitle && !draftContent)}
@@ -637,11 +640,13 @@ function NotesModule({ teamId, initialNotes }: { teamId: string, initialNotes: a
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {notes?.map((note) => (
                     <div key={note.id} className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] rounded-xl flex flex-col group transition-all relative">
-                        <div className="p-6 flex-1 flex flex-col">
+                        <div className="p-6 flex-1 flex flex-col overflow-hidden">
                             <h3 className="font-bold text-zinc-100 mb-3 truncate pr-8">{note.title}</h3>
-                            <p className="text-zinc-400 text-sm whitespace-pre-wrap line-clamp-6 leading-relaxed flex-1">
-                                {note.content}
-                            </p>
+                            <div className="text-zinc-400 text-sm whitespace-pre-wrap leading-relaxed flex-1 overflow-y-auto custom-scrollbar prose prose-invert prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-pre:p-4 prose-p:leading-relaxed max-w-none break-words">
+                                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                                    {note.content}
+                                </ReactMarkdown>
+                            </div>
                         </div>
                         <button
                             onClick={() => deleteNote(note.id)}
