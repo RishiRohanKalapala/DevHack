@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useRef, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ShieldCheck, CheckCircle2, XCircle, ArrowRight, Clock } from "lucide-react";
 import Link from "next/link";
@@ -10,11 +10,14 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
     const params = use(paramsPromise);
     const inviteCode = params.inviteCode;
 
-    const [status, setStatus] = useState<"loading" | "success" | "error" | "requested">("loading");
-    const [teamInfo, setTeamInfo] = useState<{ id: string, name: string, projectName: string } | null>(null);
+    const [status, setStatus] = useState<"loading" | "success" | "error" | "requested" | "approved">("loading");
+    const [teamInfo, setTeamInfo] = useState<{ id: string, name: string, projectName: string, alreadyMember?: boolean } | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [pollCount, setPollCount] = useState(0);
+    const pollingRef = useRef<NodeJS.Timeout | null>(null);
     const router = useRouter();
 
+    // Initial invite code check
     useEffect(() => {
         const checkInvite = async () => {
             try {
@@ -23,9 +26,10 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
                     const data = await res.json();
                     setTeamInfo(data);
 
-                    // If user is already a member, redirect to workspace immediately
                     if (data.alreadyMember) {
-                        router.push(`/workspace/${data.id}`);
+                        // Already a member — skip the queue, go to workspace
+                        setStatus("approved");
+                        setTimeout(() => router.push(`/workspace/${data.id}`), 1500);
                         return;
                     }
 
@@ -33,13 +37,40 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
                 } else {
                     setStatus("error");
                 }
-            } catch (err) {
+            } catch {
                 setStatus("error");
             }
         };
         checkInvite();
     }, [inviteCode, router]);
 
+    // Once in "requested" state, poll every 6 seconds to check if approved
+    useEffect(() => {
+        if (status !== "requested" || !teamInfo?.id) return;
+
+        pollingRef.current = setInterval(async () => {
+            try {
+                const res = await fetch(`/api/join/${inviteCode}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.alreadyMember) {
+                        // 🎉 Approved! Clear poll and redirect to their specific workspace
+                        clearInterval(pollingRef.current!);
+                        setStatus("approved");
+                        setTimeout(() => router.push(`/workspace/${data.id}`), 2000);
+                    } else {
+                        setPollCount(c => c + 1);
+                    }
+                }
+            } catch {
+                // Silent fail on poll errors
+            }
+        }, 6000);
+
+        return () => {
+            if (pollingRef.current) clearInterval(pollingRef.current);
+        };
+    }, [status, teamInfo, inviteCode, router]);
 
     const handleJoinRequest = async () => {
         setIsSubmitting(true);
@@ -55,10 +86,9 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
             if (res.ok) {
                 setStatus("requested");
             } else if (res.status === 400 && data.message === "You are already a member of this team") {
-                // Already a member → go directly to workspace
-                router.push(`/workspace/${teamInfo?.id}`);
+                setStatus("approved");
+                setTimeout(() => router.push(`/workspace/${teamInfo?.id}`), 1500);
             } else if (res.status === 400 && data.message?.includes("pending request")) {
-                // Already requested → show pending state
                 setStatus("requested");
             } else {
                 console.error("Join request failed:", data.message);
@@ -69,7 +99,6 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
             setIsSubmitting(false);
         }
     };
-
 
     return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 selection:bg-indigo-500/30 font-sans">
@@ -110,7 +139,7 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
                                     className="w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/20 text-lg flex items-center justify-center gap-2 group"
                                 >
                                     {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "Request to Join"}
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                                 </Button>
                             </div>
                         </div>
@@ -119,19 +148,41 @@ export default function JoinTeamPage({ params: paramsPromise }: { params: Promis
                     {status === "requested" && (
                         <div className="text-center space-y-6 py-6 animate-in zoom-in-95 duration-500">
                             <div className="w-16 h-16 bg-amber-500/10 border border-amber-500/30 rounded-full mx-auto flex items-center justify-center">
-                                <Clock className="w-8 h-8 text-amber-500" />
+                                <Clock className="w-8 h-8 text-amber-500 animate-pulse" />
                             </div>
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-bold text-white">Request Sent!</h2>
-                                <p className="text-zinc-500">Your request to join <span className="text-white font-bold">{teamInfo?.name}</span> is pending approval from the team leader.</p>
+                                <h2 className="text-2xl font-bold text-white">Waiting for Approval</h2>
+                                <p className="text-zinc-500">Your request to join <span className="text-white font-bold">{teamInfo?.name}</span> is pending. The team lead will review it shortly.</p>
                             </div>
+
+                            {/* Live polling indicator */}
+                            <div className="flex items-center justify-center gap-2 text-xs text-zinc-600">
+                                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping inline-block" />
+                                <span>Checking for approval automatically{pollCount > 0 ? ` (${pollCount})` : ""}...</span>
+                            </div>
+
+                            <p className="text-zinc-600 text-xs">You'll be redirected to the workspace as soon as you're approved.</p>
+
                             <Button
                                 onClick={() => router.push("/dashboard")}
                                 variant="outline"
-                                className="w-full h-12 border-zinc-800 rounded-xl"
+                                className="w-full h-12 border-zinc-800 rounded-xl text-zinc-400 hover:text-white"
                             >
-                                Back to Dashboard
+                                Wait in Dashboard
                             </Button>
+                        </div>
+                    )}
+
+                    {status === "approved" && (
+                        <div className="text-center space-y-6 py-6 animate-in zoom-in-95 duration-500">
+                            <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-full mx-auto flex items-center justify-center">
+                                <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+                            </div>
+                            <div className="space-y-2">
+                                <h2 className="text-2xl font-bold text-white">You're In! 🎉</h2>
+                                <p className="text-zinc-500">Taking you to <span className="text-white font-bold">{teamInfo?.name}</span>'s workspace...</p>
+                            </div>
+                            <Loader2 className="w-5 h-5 animate-spin text-emerald-500 mx-auto" />
                         </div>
                     )}
 
