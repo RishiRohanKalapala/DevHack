@@ -27,7 +27,9 @@ import {
     Calendar,
     Clock,
     Rocket,
-    Loader2
+    Loader2,
+    ArrowRight
+
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -393,6 +395,35 @@ function SubmissionModule({ submission }: { submission: any }) {
 function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, copyInvite: () => void, copied: boolean }) {
     const [team, setTeam] = useState(initialTeam);
     const [isUpdating, setIsUpdating] = useState(false);
+    const [inviteEmail, setInviteEmail] = useState("");
+    const [isSending, setIsSending] = useState(false);
+    const [sendStatus, setSendStatus] = useState<"idle" | "success" | "error">("idle");
+
+    const handleEmailInvite = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!inviteEmail.trim()) return;
+        setIsSending(true);
+        setSendStatus("idle");
+        try {
+            const res = await fetch("/api/invite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: inviteEmail, teamId: team.id })
+            });
+            if (res.ok) {
+                setSendStatus("success");
+                setInviteEmail("");
+            } else {
+                setSendStatus("error");
+            }
+        } catch {
+            setSendStatus("error");
+        } finally {
+            setIsSending(false);
+            setTimeout(() => setSendStatus("idle"), 4000);
+        }
+    };
+
 
     const handleRequest = async (requestId: string, action: "APPROVE" | "REJECT") => {
         setIsUpdating(true);
@@ -468,13 +499,55 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h2 className="text-3xl font-bold">Team Members</h2>
-                    <p className="text-zinc-500 mt-1">Manage collaborators and roles for this project.</p>
+                    <p className="text-zinc-500 mt-1">Manage collaborators and invite people to join.</p>
                 </div>
                 <Button onClick={copyInvite} className="bg-white text-black hover:bg-zinc-200 rounded-2xl flex items-center gap-2 px-6 h-12 font-bold shadow-xl shadow-white/10">
                     {copied ? <Check className="w-4 h-4" /> : <LinkIcon className="w-4 h-4" />}
-                    {copied ? "Copied Link" : "Invite Members"}
+                    {copied ? "Copied Link" : "Copy Invite Link"}
                 </Button>
             </div>
+
+            {/* Email Invite Box */}
+            <div className="bg-zinc-900/30 border border-zinc-800 rounded-3xl p-6 space-y-4">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-indigo-600/20 rounded-lg flex items-center justify-center">
+                        <Bell className="w-4 h-4 text-indigo-400" />
+                    </div>
+                    <div>
+                        <p className="font-bold text-white text-sm">Invite via Email</p>
+                        <p className="text-xs text-zinc-500">Send a beautifully designed invite email directly to your teammate.</p>
+                    </div>
+                </div>
+                <form onSubmit={handleEmailInvite} className="flex gap-3">
+                    <Input
+                        type="email"
+                        placeholder="teammate@email.com"
+                        value={inviteEmail}
+                        onChange={(e) => setInviteEmail(e.target.value)}
+                        className="flex-1 h-12 bg-zinc-900 border-zinc-800 rounded-2xl px-5 focus:border-indigo-500 transition-all"
+                        required
+                    />
+                    <Button
+                        type="submit"
+                        disabled={isSending}
+                        className="h-12 px-6 bg-indigo-600 hover:bg-indigo-500 rounded-2xl font-bold flex items-center gap-2"
+                    >
+                        {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                        {isSending ? "Sending..." : "Send Invite"}
+                    </Button>
+                </form>
+                {sendStatus === "success" && (
+                    <div className="flex items-center gap-2 text-emerald-400 text-sm animate-in fade-in duration-300">
+                        <Check className="w-4 h-4" /> Invite email sent successfully!
+                    </div>
+                )}
+                {sendStatus === "error" && (
+                    <p className="text-rose-400 text-sm animate-in fade-in duration-300">
+                        Failed to send invite. Check your Resend API key in .env.
+                    </p>
+                )}
+            </div>
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {team.members?.map((m: any, i: number) => (
