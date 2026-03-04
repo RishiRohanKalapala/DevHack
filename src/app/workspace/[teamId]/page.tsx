@@ -934,19 +934,19 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
             {team.joinRequests?.length > 0 && (
                 <div className="space-y-6">
                     <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                        <div className="w-2 h-2 bg-amber-500 rounded-full" />
                         <h2 className="text-xl font-bold uppercase tracking-widest text-amber-500">Pending Requests</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {team.joinRequests.map((req: any) => (
-                            <Card key={req.id} className="bg-amber-500/5 border-amber-500/20 rounded-2xl overflow-hidden backdrop-blur-sm">
-                                <CardContent className="p-6 flex items-center justify-between">
+                            <div key={req.id} className="bg-[#18181b] border border-[#27272a] rounded-2xl overflow-hidden flex flex-col justify-between">
+                                <div className="p-6 flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-amber-500">
+                                        <div className="w-10 h-10 rounded-full bg-[#121214] border border-[#27272a] flex items-center justify-center font-bold text-amber-500">
                                             {req.user?.name?.[0]}
                                         </div>
                                         <div>
-                                            <p className="font-bold text-white">{req.user?.name}</p>
+                                            <p className="font-bold text-zinc-100">{req.user?.name}</p>
                                             <p className="text-xs text-zinc-500">{req.user?.email}</p>
                                         </div>
                                     </div>
@@ -955,7 +955,7 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
                                             size="sm"
                                             onClick={() => handleRequest(req.id, "APPROVE")}
                                             disabled={isUpdating}
-                                            className="bg-emerald-600 hover:bg-emerald-500 rounded-lg h-8 px-4 text-xs"
+                                            className="bg-white hover:bg-zinc-200 text-black rounded-lg h-8 px-4 text-xs font-medium"
                                         >
                                             Approve
                                         </Button>
@@ -964,38 +964,38 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
                                             variant="outline"
                                             onClick={() => handleRequest(req.id, "REJECT")}
                                             disabled={isUpdating}
-                                            className="border-zinc-800 hover:bg-rose-500/10 hover:text-rose-500 rounded-lg h-8 px-4 text-xs"
+                                            className="bg-[#121214] border-[#27272a] text-zinc-400 hover:bg-rose-500/10 hover:text-rose-500 hover:border-rose-500/20 rounded-lg h-8 px-4 text-xs font-medium"
                                         >
                                             Reject
                                         </Button>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>
             )}
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h2 className="text-3xl font-bold">Team Members</h2>
-                    <p className="text-zinc-500 mt-1">Manage collaborators and invite people to join.</p>
+                    <h2 className="text-2xl font-bold">Team Members</h2>
+                    <p className="text-zinc-500 text-sm mt-1">Manage collaborators and invite people to join.</p>
                 </div>
-                <Button onClick={copyInvite} className="bg-white text-black hover:bg-zinc-200 rounded-2xl flex items-center gap-2 px-6 h-12 font-bold shadow-xl shadow-white/10">
+                <Button onClick={copyInvite} className="bg-white text-black hover:bg-zinc-200 rounded-lg flex items-center gap-2 px-6 h-10 font-medium shadow-none shrink-0">
                     {copied ? <Check className="w-4 h-4" /> : <LinkIcon className="w-4 h-4" />}
                     {copied ? "Copied Link" : "Copy Invite Link"}
                 </Button>
             </div>
 
             {/* Email Invite Box */}
-            <div className="bg-zinc-900/30 border border-zinc-800 rounded-3xl p-6 space-y-4">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-indigo-600/20 rounded-lg flex items-center justify-center">
-                        <Bell className="w-4 h-4 text-indigo-400" />
+            <div className="bg-[#121214] border border-[#27272a] rounded-2xl p-6 space-y-5">
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white text-black">
+                        <Bell className="w-4 h-4" />
                     </div>
                     <div>
-                        <p className="font-bold text-white text-sm">Invite via Email</p>
-                        <p className="text-xs text-zinc-500">Send a beautifully designed invite email directly to your teammate.</p>
+                        <p className="font-bold text-zinc-100 text-sm">Invite via Email</p>
+                        <p className="text-xs text-zinc-500 mt-0.5">Send a direct invitation link to your teammate.</p>
                     </div>
                 </div>
                 <form onSubmit={handleEmailInvite} className="flex gap-3">
@@ -1004,13 +1004,13 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
                         placeholder="teammate@email.com"
                         value={inviteEmail}
                         onChange={(e) => setInviteEmail(e.target.value)}
-                        className="flex-1 h-12 bg-zinc-900 border-zinc-800 rounded-2xl px-5 focus:border-indigo-500 transition-all"
+                        className="flex-1 h-10 bg-[#18181b] border-[#27272a] rounded-lg px-4 focus:border-[#3f3f46] focus:ring-1 focus:ring-[#3f3f46] transition-all text-zinc-100 text-sm"
                         required
                     />
                     <Button
                         type="submit"
                         disabled={isSending}
-                        className="h-12 px-6 bg-indigo-600 hover:bg-indigo-500 rounded-2xl font-bold flex items-center gap-2"
+                        className="h-10 px-5 bg-white text-black hover:bg-zinc-200 rounded-lg font-medium flex items-center gap-2 shrink-0 shadow-none text-sm"
                     >
                         {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
                         {isSending ? "Sending..." : "Send Invite"}
@@ -1033,28 +1033,16 @@ function MembersModule({ team: initialTeam, copyInvite, copied }: { team: any, c
             </div>
 
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {team.members?.map((m: any, i: number) => (
-                    <Card key={i} className="bg-zinc-900/30 border-zinc-800 hover:bg-zinc-900/60 transition-all rounded-3xl group overflow-hidden">
-                        <CardContent className="p-8">
-                            <div className="flex flex-col items-center text-center space-y-4">
-                                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-0.5">
-                                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center font-bold text-2xl group-hover:text-indigo-400 transition-colors">
-                                        {m.user?.name?.[0] || "?"}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xl font-bold text-white uppercase tracking-tight">{m.user?.name}</p>
-                                    <p className="text-sm font-semibold text-indigo-400 uppercase tracking-widest text-[10px] mt-1">{m.role}</p>
-                                </div>
-                                <p className="text-zinc-600 font-mono text-xs">{m.user?.email}</p>
-                            </div>
-                        </CardContent>
-                        <CardFooter className="p-4 bg-zinc-900/20 border-t border-zinc-800/50 justify-center flex items-center gap-4">
-                            <button className="text-zinc-500 hover:text-white transition-colors"><MessageSquare className="w-4 h-4" /></button>
-                            <button className="text-zinc-500 hover:text-white transition-colors"><Settings className="w-4 h-4" /></button>
-                        </CardFooter>
-                    </Card>
+                    <div key={i} className="bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors rounded-xl flex flex-col items-center p-6 text-center group">
+                        <div className="w-16 h-16 rounded-full bg-[#121214] border border-[#3f3f46] flex items-center justify-center mb-4">
+                            <span className="font-bold text-xl text-zinc-100 uppercase">{m.user?.name?.[0] || "?"}</span>
+                        </div>
+                        <p className="font-bold text-zinc-100 text-base">{m.user?.name}</p>
+                        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mt-1.5">{m.role}</p>
+                        <p className="text-zinc-500 text-xs mt-3">{m.user?.email}</p>
+                    </div>
                 ))}
             </div>
         </div>
