@@ -12,121 +12,122 @@ export default function LandingPage() {
       <div className="absolute inset-0 z-0 opacity-[0.02] pointer-events-none"
         style={{ backgroundImage: 'radial-gradient(#ffffff 0.5px, transparent 0.5px)', backgroundSize: '32px 32px' }} />
 
-      {/* Floating Ambient Glow */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-[#4f46e5]/5 blur-[120px] rounded-full -z-10 animate-pulse transition-all duration-1000" />
+      {/* Floating Ambient Glow (The Highlight) */}
+      <div className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] bg-[#4f46e5]/10 blur-[140px] rounded-full -z-10 animate-pulse transition-all duration-1000" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-[#4f46e5]/5 blur-[120px] rounded-full -z-10 animate-pulse transition-all duration-1000" />
 
-      {/* 1. Dynamic Header Navigation */}
-      <header className="relative flex-none w-full px-6 md:px-12 py-6 flex items-center justify-between z-50 max-w-[90rem] mx-auto border-b border-white/[0.03]">
-        <div className="flex items-center gap-6">
+      {/* 1. Solid Navbar (Header) */}
+      <header className="relative flex-none w-full px-6 md:px-12 py-5 flex items-center justify-between z-50 max-w-[90rem] mx-auto border-b border-white/[0.05] bg-black/90 backdrop-blur-md sticky top-0">
+        <div className="flex items-center gap-8">
           <Image
             src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
             alt="DevHack Logo"
-            width={140}
-            height={35}
+            width={160}
+            height={40}
             priority
-            className="h-7 md:h-8 w-auto object-contain transition-all duration-500 hover:brightness-150"
+            className="h-8 md:h-10 w-auto object-contain transition-all duration-500 hover:brightness-150"
           />
-          <div className="hidden md:flex h-3 w-px bg-white/5" />
-          <div className="hidden md:flex items-center gap-4 text-[9px] font-medium text-zinc-600 uppercase tracking-[0.2em]">
-            <span className="flex items-center gap-1.5"><Activity className="w-2.5 h-2.5 text-emerald-500" /> Operational</span>
-            <span className="flex items-center gap-1.5"><Layers className="w-2.5 h-2.5" /> v2.4.0</span>
+          <div className="hidden lg:flex h-4 w-px bg-white/10" />
+          <div className="hidden lg:flex items-center gap-5 text-[10px] font-medium text-zinc-500 uppercase tracking-[0.2em]">
+            <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" /> Stable</span>
+            <span className="flex items-center gap-2"><Layers className="w-3 h-3 text-[#4f46e5]" /> Beta Build</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
           <Link
             href="/login"
-            className="text-[10px] font-medium text-zinc-500 hover:text-white transition-all uppercase tracking-widest"
+            className="text-[10px] font-medium text-zinc-400 hover:text-white transition-all uppercase tracking-widest"
           >
             Login
           </Link>
           <Link
             href="/register"
-            className="px-5 py-2 bg-white text-black text-[10px] font-medium rounded-lg transition-all duration-300 hover:bg-[#4f46e5] hover:text-white uppercase tracking-widest"
+            className="px-6 py-2 bg-[#4f46e5] text-white text-[10px] font-bold rounded-lg transition-all duration-300 hover:bg-[#4338ca] hover:scale-105 active:scale-95 uppercase tracking-widest shadow-[0_0_15px_rgba(79,70,229,0.3)]"
           >
-            Join
+            Join Mission
           </Link>
         </div>
       </header>
 
-      {/* 2. Surgical Main Content - Centered & Refined */}
+      {/* 2. Surgical Main Content - Centered & Highlighted */}
       <main className="flex-1 relative flex flex-col justify-center items-center px-6 md:px-12 w-full max-w-[90rem] mx-auto z-10 py-20 text-center">
-        <div className="space-y-10 w-full max-w-3xl flex flex-col items-center">
+        <div className="space-y-12 w-full max-w-4xl flex flex-col items-center">
 
-          {/* Status Chip */}
-          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/[0.01] border border-white/[0.03] backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-1000">
-            <div className="w-1 h-1 rounded-full bg-[#4f46e5] animate-ping" />
-            <span className="text-[9px] font-medium text-[#4f46e5] uppercase tracking-[0.2em]">Environment Status</span>
-            <div className="w-px h-2.5 bg-white/10" />
-            <span className="text-[9px] font-normal text-zinc-500">System was set for the Beta leveled Tester instance</span>
+          {/* Status Message Highlight */}
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5]/5 border border-[#4f46e5]/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-1000">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#4f46e5] animate-ping" />
+            <span className="text-[10px] font-bold text-[#4f46e5] uppercase tracking-[0.2em]">Alert</span>
+            <div className="w-px h-3 bg-[#4f46e5]/20" />
+            <span className="text-[10px] font-medium text-zinc-300">System was set for the Beta leveled Tester instance</span>
           </div>
 
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.1] text-white animate-in fade-in slide-in-from-bottom-8 duration-700">
-              Build <span className="text-zinc-600 italic font-light">Beyond</span> Limits.
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tighter leading-[1.05] text-white animate-in fade-in slide-in-from-bottom-8 duration-700">
+              Build <span className="text-[#4f46e5] font-light italic">Beyond</span> Limits.
             </h1>
-            <p className="max-w-lg mx-auto text-xs md:text-sm text-zinc-500 font-normal leading-relaxed tracking-normal opacity-70 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              A surgical-grade workspace engineered for absolute speed, precision, and collaborative excellence in global competitive hacking.
+            <p className="max-w-xl mx-auto text-sm md:text-base text-zinc-500 font-normal leading-relaxed tracking-normal opacity-80 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+              DevHack is the surgical-grade workspace for the next generation of builders. Engineered for absolute speed, precision, and collaborative excellence.
             </p>
           </div>
 
-          {/* Action Grid - Smaller & Minimal */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
+          {/* Action Boxes - Solid Colors & Highlights */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
             <Link
               href="/dashboard"
-              className="group flex items-center justify-between p-5 bg-[#080808] border border-white/[0.02] rounded-2xl hover:border-[#4f46e5]/30 transition-all duration-500 hover:bg-[#0a0a0a]"
+              className="group flex items-center justify-between p-7 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
             >
-              <div className="flex items-center gap-4">
-                <div className="p-2 bg-white/5 rounded-lg group-hover:bg-[#4f46e5]/20 group-hover:text-[#4f46e5] transition-colors duration-500 text-zinc-500">
-                  <Terminal className="w-4 h-4" />
+              <div className="flex items-center gap-5">
+                <div className="p-3 bg-[#4f46e5]/10 rounded-xl group-hover:bg-[#4f46e5] group-hover:text-white transition-all duration-500 text-[#4f46e5]">
+                  <Terminal className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <h3 className="text-sm font-medium text-white tracking-tight">Participate</h3>
-                  <p className="text-[10px] text-zinc-600 mt-0.5">Enter command center</p>
+                  <h3 className="text-base font-medium text-white tracking-tight">Participate</h3>
+                  <p className="text-xs text-zinc-600 mt-1">Command center access</p>
                 </div>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-[#4f46e5]" />
+              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-500 text-[#4f46e5]" />
             </Link>
 
             <Link
               href="/organizer/login"
-              className="group flex items-center justify-between p-5 bg-[#080808] border border-white/[0.02] rounded-2xl hover:border-rose-500/30 transition-all duration-500 hover:bg-[#0a0a0a]"
+              className="group flex items-center justify-between p-7 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-rose-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
             >
-              <div className="flex items-center gap-4">
-                <div className="p-2 bg-white/5 rounded-lg group-hover:bg-rose-500/20 group-hover:text-rose-500 transition-colors duration-500 text-zinc-500">
-                  <Zap className="w-4 h-4" />
+              <div className="flex items-center gap-5">
+                <div className="p-3 bg-rose-500/10 rounded-xl group-hover:bg-rose-500 group-hover:text-white transition-all duration-500 text-rose-500">
+                  <Zap className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <h3 className="text-sm font-medium text-white tracking-tight">Organize</h3>
-                  <p className="text-[10px] text-zinc-600 mt-0.5">Manage event logistics</p>
+                  <h3 className="text-base font-medium text-white tracking-tight">Organize</h3>
+                  <p className="text-xs text-zinc-600 mt-1">Manage event logistics</p>
                 </div>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-500 text-rose-500" />
+              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-500 text-rose-500" />
             </Link>
           </div>
         </div>
       </main>
 
       {/* 3. High-Precision Footer */}
-      <footer className="relative flex-none w-full px-6 md:px-12 py-8 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-white/[0.03] z-50">
-        <div className="flex flex-col items-center md:items-start">
-          <div className="flex items-center gap-5 text-[8px] font-medium text-zinc-700 uppercase tracking-[0.3em]">
-            <span>© 2026 Platform</span>
-            <span className="w-0.5 h-0.5 rounded-full bg-zinc-800" />
-            <span>Encrypted Sync</span>
-            <span className="w-0.5 h-0.5 rounded-full bg-zinc-800" />
-            <span>SLA 99.9%</span>
+      <footer className="relative flex-none w-full px-6 md:px-12 py-10 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-white/[0.05] z-50 bg-black">
+        <div className="flex flex-col items-center md:items-start select-none">
+          <div className="flex items-center gap-6 text-[9px] font-bold text-zinc-700 uppercase tracking-[0.3em]">
+            <span>© 2026 DevHack</span>
+            <span className="w-1 h-1 rounded-full bg-zinc-800" />
+            <span>Secure Tunnel</span>
+            <span className="w-1 h-1 rounded-full bg-zinc-800" />
+            <span>99.9% Uptime</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-8">
-          <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" className="flex items-center gap-2 group text-zinc-700 hover:text-white transition-colors duration-300">
-            <Github className="w-4 h-4" />
-            <span className="text-[9px] font-medium uppercase tracking-[0.2em]">Source</span>
+        <div className="flex items-center gap-10">
+          <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" className="flex items-center gap-2 group text-zinc-700 hover:text-[#4f46e5] transition-colors duration-300">
+            <Github className="w-5 h-5" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Repository</span>
           </Link>
-          <div className="flex items-center gap-3 text-zinc-800 font-mono text-[8px] uppercase tracking-widest font-bold">
-            <div className="w-1 h-1 rounded-full bg-emerald-500/50" />
-            Kernel Verified
+          <div className="flex items-center gap-3 text-zinc-800 font-mono text-[9px] uppercase tracking-widest font-black">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/30" />
+            Kernel Stable
           </div>
         </div>
       </footer>
