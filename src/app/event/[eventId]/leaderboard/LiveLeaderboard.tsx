@@ -92,7 +92,7 @@ export default function LiveLeaderboard({ eventId }: { eventId: string }) {
 
     return (
         <div className="bg-[#0a0a0a] border border-[#27272a] rounded-2xl overflow-hidden font-sans">
-            <div className="p-4 md:p-5 flex items-center justify-between border-b border-[#27272a] bg-[#050505]">
+            <div className="p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#27272a] bg-[#050505]">
                 <div className="space-y-0.5">
                     <h3 className="text-sm font-semibold flex items-center gap-2 text-white">
                         <Trophy className="w-4 h-4 text-zinc-400" /> Live Rankings
@@ -101,18 +101,18 @@ export default function LiveLeaderboard({ eventId }: { eventId: string }) {
                         {isJudging ? "Judicial Evaluation Average" : "Real-time Task Completion"}
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
                     {/* Sharp Edged Real-Time Timer & Countdown */}
-                    <div className="hidden sm:flex items-center border border-[#27272a] bg-[#0a0a0a] text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
+                    <div className="flex items-center border border-[#27272a] bg-[#0a0a0a] text-[10px] font-mono tracking-widest text-zinc-500 uppercase whitespace-nowrap overflow-hidden">
                         <div className="px-3 py-1.5 border-r border-[#27272a] text-white">
                             {realTime || "00:00:00"}
                         </div>
-                        <div className="px-2 py-1.5 flex items-center gap-1.5">
+                        <div className="px-2 py-1.5 flex items-center gap-1.5 min-w-fit">
                             Update in <span className="text-[#4f46e5] w-3 text-center">{countdown}</span>s
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-[10px] font-semibold text-[#4f46e5] bg-[#4f46e5]/10 px-3 py-1.5 rounded-sm border border-[#4f46e5]/20 uppercase tracking-widest">
+                    <div className="flex items-center gap-2 text-[10px] font-semibold text-[#4f46e5] bg-[#4f46e5]/10 px-3 py-1.5 rounded-sm border border-[#4f46e5]/20 uppercase tracking-widest whitespace-nowrap">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full bg-[#4f46e5] opacity-75"></span>
                             <span className="relative inline-flex h-2 w-2 bg-[#4f46e5]"></span>
