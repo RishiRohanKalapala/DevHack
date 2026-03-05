@@ -21,7 +21,7 @@ export default function LandingPage() {
       <header className="relative flex-none w-full px-6 md:px-12 py-5 flex items-center justify-between z-50 max-w-[90rem] mx-auto border-b border-black/10 bg-[#f8f9fa] sticky top-0 shadow-sm transition-all duration-300">
         <div className="flex items-center gap-10">
           <Image
-            src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
+            src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-06_at_04.31.26-removebg-preview.png"
             alt="DevHack Logo"
             width={200}
             height={50}
@@ -29,9 +29,15 @@ export default function LandingPage() {
             className="h-10 md:h-12 w-auto object-contain transition-all duration-500 hover:scale-105 select-none"
           />
           <div className="hidden lg:flex h-4 w-px bg-black/10" />
-          <div className="hidden lg:flex items-center gap-5 text-[10px] font-bold text-zinc-600">
-            <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Operational</span>
-            <span className="flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5 text-rose-600" /> <span className="text-rose-600 font-bold">Beta Build 2.4.0</span></span>
+          <div className="hidden lg:flex items-center gap-4 text-[10px] font-bold">
+            <span className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Operational
+            </span>
+            <span className="flex items-center gap-2 px-3 py-1.5 bg-rose-50 text-rose-600 rounded-lg border border-rose-100">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              Beta Build 2.4.0
+            </span>
           </div>
         </div>
 
