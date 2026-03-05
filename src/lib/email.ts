@@ -165,32 +165,32 @@ export async function sendPasswordResetEmail(
   <title>DevHack Password Reset</title>
   <style>
     body { margin: 0; padding: 0; background-color: #000000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    .main-table { width: 100%; max-width: 500px; margin: 40px auto; background-color: #09090b; border: 1px solid #18181b; border-radius: 24px; overflow: hidden; }
-    .content-cell { padding: 56px 40px; text-align: center; }
-    h1 { font-size: 26px; font-weight: 800; color: #ffffff; margin: 0 0 16px; letter-spacing: -0.02em; }
+    .main-table { width: 100%; max-width: 500px; margin: 40px auto; background-color: #09090b; border: 1px solid #18181b; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .content-cell { padding: 48px 40px; text-align: center; }
+    h1 { font-size: 28px; font-weight: 800; color: #ffffff; margin: 0 0 16px; letter-spacing: -0.02em; }
     p { font-size: 15px; color: #a1a1aa; line-height: 1.6; margin: 0 0 32px; }
-    .btn { display: inline-block; padding: 18px 36px; background-color: #f43f5e; color: #ffffff !important; text-decoration: none; border-radius: 14px; font-weight: 800; font-size: 14px; box-shadow: 0 10px 20px rgba(244,63,94,0.15); }
+    .btn { display: inline-block; padding: 18px 36px; background-color: #4f46e5; color: #ffffff !important; text-decoration: none; border-radius: 14px; font-weight: 800; font-size: 14px; box-shadow: 0 10px 20px rgba(79,70,229,0.2); }
     .footer { padding: 32px; background-color: rgba(255,255,255,0.02); text-align: center; font-size: 11px; color: #3f3f46; border-top: 1px solid #18181b; }
-    .logo-icon { width: 32px; height: 32px; background-color: #f43f5e; border-radius: 10px; display: inline-block; margin-bottom: 24px; line-height: 32px; color: white; font-weight: 900; font-size: 18px; text-align: center; }
+    .logo-img { height: 48px; width: auto; display: inline-block; margin-bottom: 32px; filter: brightness(1.2); }
   </style>
 </head>
 <body>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #000000;">
     <tr>
       <td align="center" style="padding: 40px 20px;">
         <table class="main-table" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="content-cell">
-              <div class="logo-icon">V</div>
-              <h1>Restore access.</h1>
-              <p>Hello ${userName},<br/><br/>We received a request to recalibrate the security credentials for your DevHack account. Click below to continue. This link expires in 60 minutes.</p>
+              <img src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png" alt="DevHack" class="logo-img" />
+              <h1>Reset your password.</h1>
+              <p>Hi ${userName},<br/><br/>We got a request to reset your DevHack password. No worries, happens to the best of us! Click the button below to set a new one. This link will work for the next 60 minutes.</p>
               <a href="${resetLink}" class="btn">Reset Password</a>
-              <p style="font-size: 12px; margin-top: 40px; margin-bottom: 0; color: #3f3f46;">If you didn't initiate this request, no action is required.</p>
+              <p style="font-size: 12px; margin-top: 40px; margin-bottom: 0; color: #3f3f46;">If you didn't ask for this, you can just ignore this email.</p>
             </td>
           </tr>
           <tr>
             <td class="footer">
-              © ${new Date().getFullYear()} DevHack. Global Security Infrastructure.
+              © ${new Date().getFullYear()} DevHack. Mission Critical Infrastructure.
             </td>
           </tr>
         </table>

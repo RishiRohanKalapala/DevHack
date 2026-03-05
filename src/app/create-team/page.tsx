@@ -73,10 +73,10 @@ export default function CreateTeamPage() {
                 </nav>
 
                 <div className="space-y-4 max-w-2xl">
-                    <div className="inline-flex py-1.5 px-4 rounded-full bg-[#4f46e5]/10 border border-[#4f46e5]/20 text-[#4f46e5] text-[10px] font-black uppercase tracking-[0.2em] mb-2">
+                    <div className="inline-flex py-1.5 px-4 rounded-full bg-[#4f46e5]/10 border border-[#4f46e5]/20 text-[#4f46e5] text-[10px] font-bold uppercase tracking-[0.1em] mb-2">
                         Operation Initialize
                     </div>
-                    <h1 className="text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.1]">Initiate your mission.</h1>
+                    <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.1]">Initiate your mission.</h1>
                     <p className="text-zinc-500 text-lg font-medium leading-relaxed max-w-xl">
                         Provision your production environment and establish your team's command center.
                     </p>
@@ -101,43 +101,43 @@ export default function CreateTeamPage() {
                                 <div className="p-10 space-y-10">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
                                                 <Users className="w-3.5 h-3.5 text-[#4f46e5]" /> Team name
                                             </label>
                                             <Input
                                                 name="teamName"
                                                 placeholder="e.g. Cyber Squad"
                                                 required
-                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-medium text-base px-6 shadow-inner"
                                             />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
                                                 <Rocket className="w-3.5 h-3.5 text-[#4f46e5]" /> Project Title
                                             </label>
                                             <Input
                                                 name="projectName"
                                                 placeholder="e.g. Quantum Neural Bridge"
                                                 required
-                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-medium text-base px-6 shadow-inner"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
                                                 <Trophy className="w-3.5 h-3.5 text-zinc-600" /> Target Event
                                             </label>
                                             <Input
                                                 name="hackathonName"
                                                 placeholder="e.g. Eth Global 2026"
                                                 required
-                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-medium text-base px-6 shadow-inner"
                                             />
                                         </div>
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
                                                 <Users className="w-3.5 h-3.5 text-zinc-600" /> Squad capacity
                                             </label>
                                             <Input
@@ -147,19 +147,19 @@ export default function CreateTeamPage() {
                                                 required
                                                 min="1"
                                                 max="10"
-                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-semibold text-base px-6 shadow-inner"
+                                                className="bg-black border-white/5 h-14 focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-2xl placeholder:text-zinc-800 transition-all font-medium text-base px-6 shadow-inner"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                                        <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
                                             <ClipboardList className="w-3.5 h-3.5 text-[#4f46e5]" /> Mission Statement
                                         </label>
                                         <Textarea
                                             name="description"
                                             placeholder="Outline your project vision and technical objectives..."
-                                            className="bg-black border-white/5 min-h-[160px] focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-[2rem] p-8 placeholder:text-zinc-800 transition-all font-medium text-sm leading-relaxed resize-none shadow-inner"
+                                            className="bg-black border-white/5 min-h-[160px] focus:border-[#4f46e5]/50 focus:ring-0 text-white rounded-[2rem] p-8 placeholder:text-zinc-800 transition-all font-normal text-sm leading-relaxed resize-none shadow-inner"
                                         />
                                     </div>
                                 </div>
@@ -171,7 +171,7 @@ export default function CreateTeamPage() {
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="bg-white text-black hover:bg-[#4f46e5] hover:text-white px-12 h-16 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center gap-3 disabled:opacity-50 shadow-2xl shadow-indigo-500/10 group/btn"
+                                        className="bg-white text-black hover:bg-[#4f46e5] hover:text-white px-12 h-16 rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all flex items-center gap-3 disabled:opacity-50 shadow-2xl shadow-indigo-500/10 group/btn"
                                     >
                                         {isLoading ? (
                                             <Loader2 className="w-5 h-5 animate-spin" />
@@ -198,21 +198,21 @@ export default function CreateTeamPage() {
 
                             <div className="space-y-8 relative z-10">
                                 <div className="flex gap-5 group/item">
-                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-black text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">01</div>
+                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-bold text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">01</div>
                                     <div className="space-y-1">
                                         <p className="text-sm font-bold text-white">Lead Credentials</p>
                                         <p className="text-xs text-zinc-500 leading-relaxed font-medium">Automatic assignment of lead status and admin privileges.</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-5 group/item">
-                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-black text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">02</div>
+                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-bold text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">02</div>
                                     <div className="space-y-1">
                                         <p className="text-sm font-bold text-white">Invite Relay</p>
                                         <p className="text-xs text-zinc-500 leading-relaxed font-medium">Unique cryptographic invite code generated for squad sync.</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-5 group/item">
-                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-black text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">03</div>
+                                    <div className="w-10 h-10 rounded-xl bg-black border border-white/5 flex items-center justify-center shrink-0 text-xs font-bold text-zinc-600 group-hover/item:border-[#4f46e5]/50 group-hover/item:text-[#4f46e5] transition-all">03</div>
                                     <div className="space-y-1">
                                         <p className="text-sm font-bold text-white">Live Telemetry</p>
                                         <p className="text-xs text-zinc-500 leading-relaxed font-medium">Instant connection to global event rankings and dashboard.</p>
