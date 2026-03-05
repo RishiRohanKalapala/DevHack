@@ -72,9 +72,9 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/organizer/login"
-              className="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-zinc-800 text-zinc-400 font-medium text-xs md:text-sm rounded-full hover:bg-zinc-900 hover:text-white transition-colors duration-300 flex items-center justify-center gap-3 group"
+              className="w-full sm:w-auto px-8 py-3.5 bg-rose-500 hover:bg-rose-600 border border-rose-500/50 text-white font-medium text-xs md:text-sm rounded-full transition-colors duration-300 flex items-center justify-center gap-3 group shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)]"
             >
-              <Zap className="w-4 h-4 text-zinc-500 group-hover:text-[#4f46e5] transition-colors duration-300" />
+              <Zap className="w-4 h-4 text-white/80 group-hover:text-white transition-colors duration-300" />
               Organizer Panel
             </Link>
           </div>
