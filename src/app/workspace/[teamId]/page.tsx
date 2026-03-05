@@ -43,7 +43,10 @@ import {
     Code2,
     ChevronDown,
     Menu,
-    GitCommit
+    GitCommit,
+    Share2,
+    CheckCircle2,
+    Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -177,10 +180,6 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                             <button
                                 key={mod.id}
                                 onClick={() => {
-                                    if (mod.id === 'push-update') {
-                                        window.location.href = `/workspace/${teamId}/commit`;
-                                        return;
-                                    }
                                     setActiveModule(mod.id);
                                     setIsSidebarOpen(false);
                                 }}
@@ -280,6 +279,7 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                     {activeModule === "browse-tools" && <BrowseToolsModule />}
                     {activeModule === "llm" && <LLMModule team={team} />}
                     {activeModule === "code-library" && <CodeLibraryModule />}
+                    {activeModule === "push-update" && <PushUpdateModule teamId={teamId} teamName={team?.name} />}
                 </div>
             </main>
         </div>
@@ -2211,6 +2211,186 @@ function InputGroup({ label, value }: { label: string, value?: string }) {
                 {label}
             </label>
             <Input defaultValue={value} className="bg-zinc-900/30 border-zinc-800 h-14 rounded-2xl px-6 focus:border-indigo-500 text-zinc-300" />
+        </div>
+    );
+}
+
+function PushUpdateModule({ teamId, teamName }: { teamId: string, teamName: string }) {
+    const [events, setEvents] = useState<any[]>([]);
+    const [selectedEventId, setSelectedEventId] = useState<string>("");
+    const [comment, setComment] = useState("");
+    const [research, setResearch] = useState("");
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchTeamData = async () => {
+            try {
+                // Fetch registered events for this team to populate the dropdown
+                const eventsRes = await fetch(`/api/workspace/${teamId}/events`);
+                if (eventsRes.ok) {
+                    const eventsData = await eventsRes.json();
+                    setEvents(eventsData.events || []);
+                }
+            } catch (err: any) {
+                setError(err.message || "Failed to load Data");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTeamData();
+    }, [teamId]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setSuccessMessage(null);
+
+        if (!selectedEventId) {
+            setError("Please select a target Hackathon Event");
+            return;
+        }
+        if (!comment.trim() || !research.trim()) {
+            setError("Please fill out both the commit comment and your research notes");
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            const payload = {
+                eventId: selectedEventId,
+                comment,
+                research
+            };
+
+            const response = await fetch(`/api/workspace/${teamId}/commit`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || "Failed to push commit");
+            }
+
+            setSuccessMessage("Update committed to the organizer dashboard successfully!");
+            setComment("");
+            setResearch("");
+            setSelectedEventId("");
+
+            setTimeout(() => setSuccessMessage(null), 3000);
+        } catch (err: any) {
+            console.error("Commit error:", err);
+            setError(err.message || "Failed to commit update to organizer");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="flex h-64 items-center justify-center bg-[#050505] text-white rounded-2xl border border-white/5">
+                <Loader2 className="w-8 h-8 animate-spin text-[#4f46e5]" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex items-center justify-between border-b border-[#27272a] pb-4">
+                <div className="space-y-1">
+                    <h1 className="text-2xl font-bold flex items-center gap-3">
+                        <GitCommit className="w-6 h-6 text-[#4f46e5]" />
+                        Push Update
+                    </h1>
+                    <p className="text-sm font-medium text-zinc-500">
+                        Commit your team's ({teamName}) latest progress directly to the active event organizer dashboard.
+                    </p>
+                </div>
+            </div>
+
+            {error && (
+                <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-sm font-semibold flex items-center gap-2">
+                    <Activity className="w-4 h-4" /> {error}
+                </div>
+            )}
+
+            {successMessage && (
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-xl text-sm font-semibold flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" /> {successMessage}
+                </div>
+            )}
+
+            <div className="bg-[#0a0a0a] border border-[#27272a] rounded-2xl p-6 shadow-xl shadow-black/50">
+                <form onSubmit={handleSubmit} className="space-y-6">
+
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest pl-1">Target Hackathon</label>
+                        <div className="relative">
+                            <Share2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
+                            <select
+                                value={selectedEventId}
+                                onChange={(e) => setSelectedEventId(e.target.value)}
+                                className="w-full h-12 bg-black border border-[#27272a] focus:border-[#4f46e5]/50 rounded-xl pl-11 pr-4 text-sm font-medium text-white appearance-none outline-none transition-all"
+                            >
+                                <option value="" disabled className="text-zinc-600">Select active event...</option>
+                                {events.map((evt) => (
+                                    <option key={evt.id} value={evt.id}>
+                                        {evt.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        {events.length === 0 && (
+                            <p className="text-[10px] text-zinc-500 font-medium pl-1 mt-1">
+                                No registered events found. You must be registered for an event to push updates.
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest pl-1">Commit Message</label>
+                        <div className="relative group">
+                            <FileText className="absolute left-4 top-4 w-4 h-4 text-zinc-600 group-focus-within:text-[#4f46e5] transition-colors" />
+                            <textarea
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                placeholder="What did you build? (e.g., 'Implemented core auth logic and database schema')"
+                                className="w-full bg-black border border-[#27272a] focus:border-[#4f46e5]/50 text-white rounded-xl pl-11 pr-4 py-3 min-h-[100px] resize-y outline-none transition-all placeholder:text-zinc-700 text-sm font-medium"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest pl-1">Research & Findings</label>
+                        <div className="relative group">
+                            <Search className="absolute left-4 top-4 w-4 h-4 text-zinc-600 group-focus-within:text-[#4f46e5] transition-colors" />
+                            <textarea
+                                value={research}
+                                onChange={(e) => setResearch(e.target.value)}
+                                placeholder="Any major technical research, articles read, or bugs resolved during this phase..."
+                                className="w-full bg-black border border-[#27272a] focus:border-[#4f46e5]/50 text-white rounded-xl pl-11 pr-4 py-3 min-h-[150px] resize-y outline-none transition-all placeholder:text-zinc-700 text-sm font-medium"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-[#27272a]">
+                        <button
+                            type="submit"
+                            disabled={isSubmitting || events.length === 0}
+                            className="w-full h-11 bg-white hover:bg-zinc-200 text-black rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-white/5"
+                        >
+                            {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><GitCommit className="w-4 h-4" /> Push to Organizer Dashboard</>}
+                        </button>
+                    </div>
+
+                </form>
+            </div>
         </div>
     );
 }
