@@ -39,7 +39,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-[#000000] text-zinc-400 selection:bg-[#4f46e5]/30 font-sans overflow-hidden flex flex-col relative tracking-tight">
+    <div className="min-h-screen w-full bg-[#000000] text-zinc-400 selection:bg-[#4f46e5]/30 font-sans overflow-x-hidden flex flex-col relative tracking-tight">
 
       {/* Background Subtle Tech Grid */}
       <div className="absolute inset-0 z-0 opacity-[0.02] pointer-events-none"
@@ -106,8 +106,8 @@ export default function LandingPage() {
       </header>
 
       {/* 2. Surgical Main Content - Centered & Highlighted */}
-      <main className="flex-1 relative w-full max-w-[90rem] mx-auto px-6 md:px-12 z-10 flex items-center py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
+      <main className="flex-1 relative w-full max-w-[90rem] mx-auto px-6 md:px-12 z-10 flex items-center py-12 md:py-20 lg:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center w-full">
 
           <div className="flex flex-col items-start text-left space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
 
@@ -128,7 +128,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-full">
               <Link
                 href="/dashboard"
                 className="group flex items-center justify-between p-5 bg-[#0c0c0c] border border-white/15 rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
@@ -179,12 +179,12 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="hidden lg:flex relative items-center justify-center animate-in fade-in zoom-in duration-1000 delay-300">
-            <div className="absolute inset-0 bg-[#4f46e5]/5 blur-[120px] rounded-full animate-pulse" />
+          <div className="flex lg:flex relative items-center justify-center animate-in fade-in zoom-in duration-1000 delay-300 w-full max-w-md mx-auto lg:max-w-full">
+            <div className="absolute inset-0 bg-[#4f46e5]/5 blur-[80px] md:blur-[120px] rounded-full animate-pulse" />
             <img
               src="https://ik.imagekit.io/dypkhqxip/Breaking%20barriers-bro.svg"
               alt="Build Illustration"
-              className="relative z-10 w-full h-auto max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(79,70,229,0.15)] transition-transform duration-700 hover:scale-[1.02]"
+              className="relative z-10 w-full h-auto max-w-sm md:max-w-md lg:max-w-2xl object-contain drop-shadow-[0_0_50px_rgba(79,70,229,0.15)] transition-transform duration-700 hover:scale-[1.02]"
             />
           </div>
 
