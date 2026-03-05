@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useRef } from "react";
 import {
     Layout,
     CheckSquare,
@@ -62,6 +62,7 @@ const MODULES = [
     { id: "notes", label: "Notes", icon: <FileText className="w-4 h-4" /> },
     { id: "submission", label: "Submission", icon: <Globe className="w-4 h-4" /> },
     { id: "members", label: "Members", icon: <Users className="w-4 h-4" /> },
+    { id: "messages", label: "Messages", icon: <MessageSquare className="w-4 h-4 text-indigo-400" /> },
     { id: "problem-statements", label: "Problem Statements", icon: <ClipboardList className="w-4 h-4" /> },
     { id: "browse-tools", label: "Browse Tools", icon: <Wrench className="w-4 h-4" /> },
     { id: "llm", label: "LLM AI", icon: <Bot className="w-4 h-4" /> },
@@ -180,6 +181,10 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                             <button
                                 key={mod.id}
                                 onClick={() => {
+                                    if (mod.id === 'messages') {
+                                        window.location.href = `/workspace/${teamId}/messages`;
+                                        return;
+                                    }
                                     setActiveModule(mod.id);
                                     setIsSidebarOpen(false);
                                 }}
@@ -2177,6 +2182,8 @@ function LLMModule({ team }: { team: any }) {
         </div>
     );
 }
+
+
 
 /* Helpers */
 

@@ -78,7 +78,7 @@ export async function GET(
         // 3. Update Cache (TTL 60s for Balancing)
         await setCachedData(cacheKey, team, 60);
 
-        return NextResponse.json(team);
+        return NextResponse.json({ ...team, currentUserId: userId });
     } catch (error: any) {
         console.error("Fetch team error:", error);
         return NextResponse.json(

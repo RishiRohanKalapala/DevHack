@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "ts-node src/server/socket.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -35,13 +35,16 @@
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
     "resend": "^6.9.3",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
     "tailwind-merge": "^3.5.0",
+    "ts-node": "^10.9.2",
     "zod": "^4.3.6",
     "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^20.19.35",
     "@types/nodemailer": "^7.0.11",
     "@types/pg": "^8.18.0",
     "@types/react": "^19",
