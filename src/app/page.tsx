@@ -58,17 +58,17 @@ export default function LandingPage() {
 
       {/* 2. Surgical Main Content - Centered & Highlighted */}
       <main className="flex-1 relative flex flex-col justify-center items-center px-6 md:px-12 w-full max-w-[90rem] mx-auto z-10 py-16 text-center">
-        <div className="relative w-full max-w-5xl flex flex-col items-center p-12 md:p-24 rounded-[3rem] bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.05] backdrop-blur-[2px] space-y-12 shadow-2xl overflow-hidden group/hero">
+        <div className="relative w-full max-w-5xl flex flex-col items-center p-12 md:p-24 rounded-[3rem] bg-[#080808] border border-white/[0.05] space-y-12 shadow-2xl overflow-hidden group/hero">
           {/* Subtle Inner Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#4f46e5]/20 to-transparent" />
-          <div className="absolute inset-0 bg-blue-500/[0.01] pointer-events-none" />
+          <div className="absolute inset-0 bg-[#4f46e5]/[0.02] pointer-events-none" />
 
           {/* Status Message Highlight */}
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5]/5 border border-[#4f46e5]/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-1000">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#4f46e5] animate-ping" />
-            <span className="text-[10px] font-bold text-[#4f46e5] uppercase tracking-[0.2em]">Alert</span>
-            <div className="w-px h-3 bg-[#4f46e5]/20" />
-            <span className="text-[10px] font-medium text-zinc-300">System was set for the Beta leveled Tester instance</span>
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[#4f46e5] border border-[#4f46e5]/20 animate-in fade-in slide-in-from-top-4 duration-1000 shadow-[0_0_20px_rgba(79,70,229,0.2)]">
+            <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+            <span className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Live Status</span>
+            <div className="w-px h-3 bg-white/20" />
+            <span className="text-[10px] font-medium text-white/90">System was set for the Beta leveled Tester instance</span>
           </div>
 
           <div className="space-y-4">
@@ -80,14 +80,14 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Action Boxes - 3 Column Grid */}
+          {/* Action Boxes - 3 Column Grid with Solid Fills */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full max-w-4xl">
             <Link
               href="/dashboard"
-              className="group flex items-center justify-between p-6 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+              className="group flex items-center justify-between p-6 bg-[#0c0c0c] border border-white/[0.05] rounded-2xl hover:border-[#4f46e5]/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
             >
               <div className="flex items-center gap-4">
-                <div className="p-2.5 bg-[#4f46e5]/10 rounded-xl group-hover:bg-[#4f46e5] group-hover:text-white transition-all duration-500 text-[#4f46e5]">
+                <div className="p-2.5 bg-[#4f46e5] rounded-xl text-white transition-all duration-500 shadow-[0_0_15px_rgba(79,70,229,0.2)]">
                   <Terminal className="w-4 h-4" />
                 </div>
                 <div className="text-left">
@@ -100,10 +100,10 @@ export default function LandingPage() {
 
             <Link
               href="/join-team-preview"
-              className="group flex items-center justify-between p-6 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-emerald-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+              className="group flex items-center justify-between p-6 bg-[#0c0c0c] border border-white/[0.05] rounded-2xl hover:border-emerald-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
             >
               <div className="flex items-center gap-4">
-                <div className="p-2.5 bg-emerald-500/10 rounded-xl group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 text-emerald-500">
+                <div className="p-2.5 bg-emerald-600 rounded-xl text-white transition-all duration-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
                   <Users className="w-4 h-4" />
                 </div>
                 <div className="text-left">
@@ -116,10 +116,10 @@ export default function LandingPage() {
 
             <Link
               href="/organizer/login"
-              className="group flex items-center justify-between p-6 bg-[#0a0a0a] border border-white/[0.05] rounded-2xl hover:border-rose-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
+              className="group flex items-center justify-between p-6 bg-[#0c0c0c] border border-white/[0.05] rounded-2xl hover:border-rose-500/40 transition-all duration-500 hover:bg-[#121214] shadow-2xl"
             >
               <div className="flex items-center gap-4">
-                <div className="p-2.5 bg-rose-500/10 rounded-xl group-hover:bg-rose-500 group-hover:text-white transition-all duration-500 text-rose-500">
+                <div className="p-2.5 bg-rose-600 rounded-xl text-white transition-all duration-500 shadow-[0_0_15px_rgba(225,29,72,0.2)]">
                   <Zap className="w-4 h-4" />
                 </div>
                 <div className="text-left">
