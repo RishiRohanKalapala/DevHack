@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Zap, Github, Terminal, Activity, Layers, Users } from "lucide-react";
+import { ArrowRight, Zap, Github, Terminal, Activity, Layers, Users, AlertTriangle, AlertCircle } from "lucide-react";
 import Image from "next/image";
+import { BottomBar } from "@/components/BottomBar";
 
 export default function LandingPage() {
   return (
@@ -18,23 +19,28 @@ export default function LandingPage() {
 
       {/* 1. Solid Navbar (Header) */}
       <header className="relative flex-none w-full px-6 md:px-12 py-5 flex items-center justify-between z-50 max-w-[90rem] mx-auto border-b border-white/[0.05] bg-black/90 backdrop-blur-md sticky top-0">
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-10">
           <Image
             src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
             alt="DevHack Logo"
-            width={160}
-            height={40}
+            width={200}
+            height={50}
             priority
-            className="h-8 md:h-10 w-auto object-contain transition-all duration-500 hover:brightness-150"
+            className="h-10 md:h-12 w-auto object-contain transition-all duration-500 hover:brightness-150"
           />
           <div className="hidden lg:flex h-4 w-px bg-white/10" />
           <div className="hidden lg:flex items-center gap-5 text-[10px] font-medium text-zinc-500 uppercase tracking-[0.2em]">
-            <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" /> Stable</span>
-            <span className="flex items-center gap-2"><Layers className="w-3 h-3 text-[#4f46e5]" /> Beta Build</span>
+            <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Operational</span>
+            <span className="flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5 text-rose-500" /> <span className="text-rose-500 font-bold">Beta Build 2.4.0</span></span>
           </div>
         </div>
 
         <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6 pr-4 border-r border-white/5">
+            <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" className="text-zinc-500 hover:text-white transition-all">
+              <Github className="w-4.5 h-4.5" />
+            </Link>
+          </div>
           <Link
             href="/login"
             className="text-[10px] font-medium text-zinc-400 hover:text-white transition-all uppercase tracking-widest"
@@ -124,29 +130,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* 3. High-Precision Footer */}
-      <footer className="relative flex-none w-full px-6 md:px-12 py-10 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-white/[0.05] z-50 bg-black">
-        <div className="flex flex-col items-center md:items-start select-none">
-          <div className="flex items-center gap-6 text-[9px] font-bold text-zinc-700 uppercase tracking-[0.3em]">
-            <span>© 2026 DevHack</span>
-            <span className="w-1 h-1 rounded-full bg-zinc-800" />
-            <span>Secure Tunnel</span>
-            <span className="w-1 h-1 rounded-full bg-zinc-800" />
-            <span>99.9% Uptime</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-10">
-          <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" className="flex items-center gap-2 group text-zinc-700 hover:text-[#4f46e5] transition-colors duration-300">
-            <Github className="w-5 h-5" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Repository</span>
-          </Link>
-          <div className="flex items-center gap-3 text-zinc-800 font-mono text-[9px] uppercase tracking-widest font-black">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/30" />
-            Kernel Stable
-          </div>
-        </div>
-      </footer>
+      <BottomBar />
 
     </div>
   );
