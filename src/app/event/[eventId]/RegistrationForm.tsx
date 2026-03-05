@@ -47,46 +47,44 @@ export default function RegistrationForm({ eventId }: { eventId: string }) {
 
     if (status === "success") {
         return (
-            <div className="bg-[#121214] border border-rose-500/20 rounded-[2rem] p-12 text-center space-y-6 shadow-2xl shadow-rose-500/10">
-                <div className="w-20 h-20 bg-rose-500/10 rounded-full mx-auto flex items-center justify-center">
-                    <Loader2 className="w-10 h-10 text-rose-500 animate-spin" />
+            <div className="bg-[#0a0a0a] border border-[#4f46e5]/30 rounded-2xl p-10 text-center space-y-6 shadow-lg shadow-[#4f46e5]/5">
+                <div className="w-16 h-16 bg-[#4f46e5]/10 rounded-full mx-auto flex items-center justify-center">
+                    <Loader2 className="w-8 h-8 text-[#4f46e5] animate-spin" />
                 </div>
                 <div>
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Mission Initialized!</h2>
-                    <p className="text-zinc-500 mt-2 font-medium">Redirecting to your mission control workspace...</p>
+                    <h2 className="text-xl font-semibold text-white tracking-tight">Mission Initialized!</h2>
+                    <p className="text-zinc-500 mt-2 text-sm font-medium">Redirecting to your mission control workspace...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <form onSubmit={handleSubmit} className="bg-[#121214] border border-white/5 rounded-[2rem] p-8 shadow-2xl shadow-black/50 overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-indigo-500/0 to-indigo-500/5 pointer-events-none" />
-
+        <form onSubmit={handleSubmit} className="bg-[#0a0a0a] border border-[#27272a] rounded-2xl p-8 shadow-xl shadow-black/50 overflow-hidden relative">
             <div className="space-y-6 relative z-10">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-400 ml-1">Team Name</label>
+                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Team Name</label>
                     <div className="relative group">
-                        <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-400 transition-colors" />
+                        <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-[#4f46e5] transition-colors" />
                         <input
                             name="teamName"
                             placeholder="Quantum Hackers"
                             required
-                            className="w-full h-12 bg-black border border-white/5 focus:border-indigo-500/50 text-white rounded-xl pl-11 outline-none transition-all placeholder:text-zinc-800 text-sm font-medium"
+                            className="w-full h-11 bg-black border border-[#27272a] focus:border-[#4f46e5]/50 text-white rounded-xl pl-11 outline-none transition-all placeholder:text-zinc-700 text-sm font-medium"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-zinc-400 ml-1">Team Lead Email</label>
+                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Team Lead Email</label>
                     <div className="relative group">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-indigo-400 transition-colors" />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within:text-[#4f46e5] transition-colors" />
                         <input
                             name="leadEmail"
                             type="email"
                             placeholder="lead@example.com"
                             required
-                            className="w-full h-12 bg-black border border-white/5 focus:border-indigo-500/50 text-white rounded-xl pl-11 outline-none transition-all placeholder:text-zinc-800 text-sm font-medium"
+                            className="w-full h-11 bg-black border border-[#27272a] focus:border-[#4f46e5]/50 text-white rounded-xl pl-11 outline-none transition-all placeholder:text-zinc-700 text-sm font-medium"
                         />
                     </div>
                 </div>
@@ -100,9 +98,9 @@ export default function RegistrationForm({ eventId }: { eventId: string }) {
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-12 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 group shadow-xl shadow-white/5 disabled:opacity-50 mt-4"
+                    className="w-full h-11 bg-white text-black hover:bg-zinc-200 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 group shadow-lg shadow-white/5 disabled:opacity-50 mt-4"
                 >
-                    {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Submit Registration Request"}
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit Registration Request"}
                 </button>
             </div>
         </form>
