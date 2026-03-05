@@ -28,9 +28,9 @@ export async function POST(req: Request) {
         }
 
         // Check if user is a Google OAuth user without a password
-        if (!user.password && user.password !== null) {
-            // If they signed up via google, they still shouldn't really reset a password, 
-            // but we'll let them set one if they really want, by generating a token.
+        if (!user.password) {
+            // They can still set a password to enable direct login
+            console.log(`User ${email} initialized password reset flow.`);
         }
 
         // Generate a random token

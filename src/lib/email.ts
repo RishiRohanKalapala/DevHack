@@ -18,7 +18,10 @@ export async function sendInviteEmail(
   projectName: string,
   senderName: string
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
+  let baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
+  // Strip trailing /api/auth if present to ensure correct app routing
+  baseUrl = baseUrl.replace(/\/api\/auth\/?$/, "");
+
   const inviteLink = `${baseUrl}/join/${inviteCode}`;
   const fromEmail = process.env.GMAIL_USER;
 
@@ -134,7 +137,10 @@ export async function sendPasswordResetEmail(
   resetToken: string,
   userName: string
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
+  let baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://dev-hack-v2-xi.vercel.app";
+  // Strip trailing /api/auth if present to ensure correct app routing
+  baseUrl = baseUrl.replace(/\/api\/auth\/?$/, "");
+
   const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
   const fromEmail = process.env.GMAIL_USER;
 

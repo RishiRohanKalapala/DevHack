@@ -13,19 +13,24 @@ export async function POST(req: Request) {
             );
         }
 
-        // Find user by valid unexpired token
+        // First find the user with this token (ignoring expiry to give better error)
         const user = await prisma.user.findFirst({
             where: {
                 resetPasswordToken: token,
-                resetPasswordExpires: {
-                    gt: new Date() // Token expiration must be greater than current time
-                }
             },
         });
 
         if (!user) {
             return NextResponse.json(
-                { message: "Invalid or expired reset token" },
+                { message: "This password reset link is invalid. Please request a new one." },
+                { status: 400 }
+            );
+        }
+
+        // Check expiry manually for better reporting
+        if (user.resetPasswordExpires && user.resetPasswordExpires < new Date()) {
+            return NextResponse.json(
+                { message: "This password reset link has expired. Links last for 60 minutes." },
                 { status: 400 }
             );
         }
