@@ -18,7 +18,7 @@ export default function LandingPage() {
       <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-[#4f46e5]/5 blur-[120px] rounded-full -z-10 animate-pulse transition-all duration-1000" />
 
       {/* 1. Solid Navbar (Header) */}
-      <header className="relative flex-none w-full px-6 md:px-12 py-5 flex items-center justify-between z-50 max-w-[90rem] mx-auto border-b border-white/[0.05] bg-black/90 backdrop-blur-md sticky top-0">
+      <header className="relative flex-none w-full px-6 md:px-12 py-5 flex items-center justify-between z-50 max-w-[90rem] mx-auto border-b border-black/10 bg-[#f8f9fa] sticky top-0 shadow-sm transition-all duration-300">
         <div className="flex items-center gap-10">
           <Image
             src="https://ik.imagekit.io/dypkhqxip/Screenshot_2026-03-04_at_20.33.46-removebg-preview.png"
@@ -26,30 +26,31 @@ export default function LandingPage() {
             width={200}
             height={50}
             priority
-            className="h-10 md:h-12 w-auto object-contain transition-all duration-500 hover:brightness-150"
+            className="h-10 md:h-12 w-auto object-contain transition-all duration-500 hover:scale-105 select-none invert contrast-125"
           />
-          <div className="hidden lg:flex h-4 w-px bg-white/10" />
-          <div className="hidden lg:flex items-center gap-5 text-[10px] font-medium text-zinc-500 uppercase tracking-[0.2em]">
+          <div className="hidden lg:flex h-4 w-px bg-black/10" />
+          <div className="hidden lg:flex items-center gap-5 text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em]">
             <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Operational</span>
-            <span className="flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5 text-rose-500" /> <span className="text-rose-500 font-bold">Beta Build 2.4.0</span></span>
+            <span className="flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5 text-rose-600" /> <span className="text-rose-600 font-bold">Beta Build 2.4.0</span></span>
           </div>
         </div>
 
         <div className="flex items-center gap-8">
-          <div className="flex items-center gap-6 pr-4 border-r border-white/5">
-            <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" className="text-zinc-500 hover:text-white transition-all">
+          <div className="flex items-center gap-6 pr-4 border-r border-black/10">
+            <Link href="https://github.com/RishiRohanKalapala/DevHack" target="_blank" className="flex items-center gap-2 text-zinc-900 group hover:text-[#4f46e5] transition-all">
               <Github className="w-4.5 h-4.5" />
+              <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">GitHub</span>
             </Link>
           </div>
           <Link
             href="/login"
-            className="text-[10px] font-medium text-zinc-400 hover:text-white transition-all uppercase tracking-widest"
+            className="text-[10px] font-bold text-zinc-900 hover:text-[#4f46e5] transition-all uppercase tracking-widest"
           >
             Login
           </Link>
           <Link
             href="/register"
-            className="px-6 py-2 bg-[#4f46e5] text-white text-[10px] font-bold rounded-lg transition-all duration-300 hover:bg-[#4338ca] hover:scale-105 active:scale-95 uppercase tracking-widest shadow-[0_0_15px_rgba(79,70,229,0.3)]"
+            className="px-6 py-2 bg-[#4f46e5] text-white text-[10px] font-black rounded-lg transition-all duration-300 hover:bg-[#4338ca] hover:scale-105 active:scale-95 uppercase tracking-widest shadow-[0_5px_15px_rgba(79,70,229,0.2)]"
           >
             Join Mission
           </Link>
