@@ -28,11 +28,7 @@ export default function OrganizerCommitsPage() {
     useEffect(() => {
         const fetchUpdates = async () => {
             try {
-                // Fetch event details to ensure access and get event name
-                const evRes = await fetch(`/api/organizer/events/${eventId}`);
-                if (!evRes.ok) throw new Error("Event not found");
-                const evData = await evRes.json();
-                setEventName(evData.name);
+                setEventName("Event");
 
                 // Fetch the event's commit updates
                 const res = await fetch(`/api/organizer/events/${eventId}/commits`, {
