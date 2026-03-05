@@ -40,9 +40,9 @@ import {
     Boxes,
     Cpu,
     Code,
-    Code2,
     ChevronDown,
-    Menu
+    Menu,
+    GitCommit
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -62,6 +62,7 @@ const MODULES = [
     { id: "browse-tools", label: "Browse Tools", icon: <Wrench className="w-4 h-4" /> },
     { id: "llm", label: "LLM AI", icon: <Bot className="w-4 h-4" /> },
     { id: "code-library", label: "Code Library", icon: <Code2 className="w-4 h-4" /> },
+    { id: "push-update", label: "Push Update", icon: <GitCommit className="w-4 h-4 text-emerald-400" /> },
 ];
 
 export default function WorkspacePage({ params: paramsPromise }: { params: Promise<{ teamId: string }> }) {
@@ -175,6 +176,10 @@ export default function WorkspacePage({ params: paramsPromise }: { params: Promi
                             <button
                                 key={mod.id}
                                 onClick={() => {
+                                    if (mod.id === 'push-update') {
+                                        window.location.href = `/workspace/${teamId}/commit`;
+                                        return;
+                                    }
                                     setActiveModule(mod.id);
                                     setIsSidebarOpen(false);
                                 }}

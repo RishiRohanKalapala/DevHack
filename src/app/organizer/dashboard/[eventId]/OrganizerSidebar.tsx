@@ -9,7 +9,8 @@ import {
     Clock,
     ArrowLeft,
     Activity,
-    ExternalLink
+    ExternalLink,
+    GitCommit
 } from "lucide-react";
 
 export default function OrganizerSidebar({ eventId, eventName }: { eventId: string, eventName: string }) {
@@ -18,6 +19,7 @@ export default function OrganizerSidebar({ eventId, eventName }: { eventId: stri
     const navItems = [
         { name: "Summary", href: `/organizer/dashboard/${eventId}`, icon: LayoutDashboard },
         { name: "Team Hub", href: `/organizer/dashboard/${eventId}/teams`, icon: Users },
+        { name: "Updates & Commits", href: `/organizer/dashboard/${eventId}/commits`, icon: GitCommit },
         { name: "Judges Panel", href: `/organizer/dashboard/${eventId}/judges`, icon: Gavel },
         { name: "Live Timeline", href: `/organizer/dashboard/${eventId}/timeline`, icon: Clock },
         { name: "System Controls", href: `/organizer/dashboard/${eventId}/controls`, icon: Activity },
@@ -48,8 +50,8 @@ export default function OrganizerSidebar({ eventId, eventName }: { eventId: stri
                             key={item.href}
                             href={item.href}
                             className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group ${isActive
-                                    ? "bg-rose-500/10 text-rose-500 border border-rose-500/20 shadow-[0_0_20px_rgba(244,63,94,0.08)]"
-                                    : "text-zinc-500 hover:text-white hover:bg-white/5"
+                                ? "bg-rose-500/10 text-rose-500 border border-rose-500/20 shadow-[0_0_20px_rgba(244,63,94,0.08)]"
+                                : "text-zinc-500 hover:text-white hover:bg-white/5"
                                 }`}
                         >
                             <item.icon className={`w-4 h-4 transition-transform ${isActive ? "text-rose-500" : "group-hover:scale-105"}`} />

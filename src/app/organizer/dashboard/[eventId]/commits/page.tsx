@@ -54,7 +54,7 @@ export default function OrganizerCommitsPage() {
 
     if (isLoading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-[#050505]">
+            <div className="flex h-[50vh] items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
             </div>
         );
@@ -62,21 +62,19 @@ export default function OrganizerCommitsPage() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#050505] p-6 lg:p-12 text-white">
-                <div className="max-w-4xl mx-auto text-center space-y-4">
-                    <p className="text-red-500 font-bold">{error}</p>
-                    <Link href="/dashboard" className="text-rose-500 hover:text-rose-400 font-semibold text-sm">Return to Dashboard</Link>
-                </div>
+            <div className="py-20 text-center space-y-4">
+                <p className="text-red-500 font-bold">{error}</p>
+                <Link href={`/organizer/dashboard/${eventId}`} className="text-rose-500 hover:text-rose-400 font-semibold text-sm">Return to Event</Link>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#050505] p-6 lg:p-12 text-white font-sans selection:bg-rose-500/30">
+        <div className="space-y-8 font-sans">
             <div className="max-w-5xl mx-auto space-y-8">
                 {/* Header */}
                 <div className="space-y-4">
-                    <Link href={`/dashboard/manage/${eventId}`} className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs font-semibold uppercase tracking-widest">
+                    <Link href={`/organizer/dashboard/${eventId}`} className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs font-semibold uppercase tracking-widest">
                         <ArrowLeft className="w-4 h-4" /> Back to Event
                     </Link>
                     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
