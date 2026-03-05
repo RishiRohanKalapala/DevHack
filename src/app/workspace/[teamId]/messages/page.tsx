@@ -63,20 +63,35 @@ export default function MessagesPage({ params: paramsPromise }: { params: Promis
         fetchTeam();
     }, [teamId]);
 
-    // Fetch Initial Messages
-    useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const res = await fetch(`/api/workspace/${teamId}/messages`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setMessages(data);
-                }
-            } catch (err) {
-                console.error("Failed to fetch messages:", err);
+    // Fetch Messages Function (Reusable for Polling)
+    const fetchMessages = async (isBackground = false) => {
+        try {
+            const res = await fetch(`/api/workspace/${teamId}/messages`);
+            if (res.ok) {
+                const data = await res.json();
+                setMessages(prev => {
+                    // Optimized merge logic: only add messages that aren't already in the list
+                    const newMessages = data.filter((m: any) => !prev.some(p => p.id === m.id));
+                    if (newMessages.length === 0) return prev;
+                    return [...prev, ...newMessages].sort((a, b) =>
+                        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                    );
+                });
             }
-        };
-        fetchMessages();
+        } catch (err) {
+            if (!isBackground) console.error("Failed to fetch messages:", err);
+        }
+    };
+
+    // Initial Fetch + Background Polling (2-second interval)
+    useEffect(() => {
+        fetchMessages(); // Initial jumpstart
+
+        const pollInterval = setInterval(() => {
+            fetchMessages(true);
+        }, 2000); // 2-second background refresh gap
+
+        return () => clearInterval(pollInterval);
     }, [teamId]);
 
     const [isConnected, setIsConnected] = useState(false);
