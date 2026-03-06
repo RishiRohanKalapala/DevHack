@@ -18,7 +18,7 @@ export default function BulkInvitePage() {
         }
 
         const emailList = emails
-            .split(/[\n;]/)
+            .split(/[\n,;]/) // Added comma support
             .map(row => {
                 const parts = row.split('|');
                 if (parts.length >= 2) {
@@ -35,10 +35,10 @@ export default function BulkInvitePage() {
                 }
                 return null;
             })
-            .filter(e => e && e.email.includes('@'));
+            .filter(e => e && e.email && e.email.includes('@'));
 
         if (emailList.length === 0) {
-            setStatus({ type: 'error', message: "No valid 'Team | Email' pairs found." });
+            setStatus({ type: 'error', message: "No valid emails found in the input." });
             return;
         }
 
@@ -57,12 +57,13 @@ export default function BulkInvitePage() {
             if (res.ok) {
                 setStatus({
                     type: 'success',
-                    message: `Successfully sent ${data.results.length} invitations!`
+                    message: `Dispatched ${data.results.length} invitations! ${data.errors ? `(Partially failed: ${data.errors.length})` : ''}`
                 });
                 setEmails("");
-                setTimeout(() => router.refresh(), 2000);
+                setTimeout(() => router.refresh(), 3000);
             } else {
-                setStatus({ type: 'error', message: data.message || "Failed to send invitations." });
+                const errorDetail = data.errors ? `: ${data.errors[0]}` : '';
+                setStatus({ type: 'error', message: (data.message || "Failed to send.") + errorDetail });
             }
         } catch (error) {
             setStatus({ type: 'error', message: "An unexpected error occurred." });

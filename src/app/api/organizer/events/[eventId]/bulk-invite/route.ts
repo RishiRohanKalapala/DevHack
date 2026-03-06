@@ -50,6 +50,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
     }
 
     const invitationResults = [];
+    const errors = [];
 
     for (const entry of emails) {
       try {
@@ -60,26 +61,33 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
         console.log(`Processing Dispatch for: ${cleanTeamName} (${cleanEmail})`);
 
         // 1. Create registration if not exists
-        let registration = await prisma.eventRegistration.findFirst({
-          where: { eventId, leadEmail: cleanEmail }
-        });
+        let registration;
+        try {
+          registration = await prisma.eventRegistration.findFirst({
+            where: { eventId, leadEmail: cleanEmail }
+          });
 
-        if (!registration) {
-          console.log(`[DB] Creating New Registration for ${cleanEmail}`);
-          registration = await prisma.eventRegistration.create({
-            data: {
-              eventId,
-              leadEmail: cleanEmail,
-              teamName: cleanTeamName,
-              status: "PENDING"
-            }
-          });
-        } else {
-          console.log(`[DB] Updating Existing Registration for ${cleanEmail}`);
-          await prisma.eventRegistration.update({
-            where: { id: registration.id },
-            data: { teamName: cleanTeamName }
-          });
+          if (!registration) {
+            console.log(`[DB] Creating New Registration for ${cleanEmail}`);
+            registration = await prisma.eventRegistration.create({
+              data: {
+                eventId,
+                leadEmail: cleanEmail,
+                teamName: cleanTeamName,
+                status: "PENDING"
+              }
+            });
+          } else {
+            console.log(`[DB] Updating Existing Registration for ${cleanEmail}`);
+            await prisma.eventRegistration.update({
+              where: { id: registration.id },
+              data: { teamName: cleanTeamName }
+            });
+          }
+        } catch (dbErr: any) {
+          console.error("[DB ERROR]", dbErr);
+          errors.push(`Database error for ${cleanEmail}: ${dbErr.message}`);
+          continue;
         }
 
         // 2. Send Email
@@ -163,16 +171,26 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
         invitationResults.push(cleanEmail);
       } catch (entryError: any) {
         console.error(`[CRITICAL] Entry Dispatch Failed for: ${entry.email}. Error: ${entryError.message}`);
-        console.debug(entryError);
-        // Continue with next entry
+        errors.push(`Failed for ${entry.email}: ${entryError.message}`);
       }
     }
 
-    console.log("Bulk Dispatch Completed Successfully. Summary:", invitationResults.length);
-    return NextResponse.json({ message: "Invitations sent successfully", results: invitationResults }, { status: 200 });
+    if (invitationResults.length === 0 && emails.length > 0) {
+      return NextResponse.json({
+        message: "All dispatches failed",
+        errors: errors
+      }, { status: 500 });
+    }
+
+    console.log("Bulk Dispatch Completed. Results:", invitationResults.length);
+    return NextResponse.json({
+      message: "Invitations processed",
+      results: invitationResults,
+      errors: errors.length > 0 ? errors : undefined
+    }, { status: 200 });
 
   } catch (error: any) {
     console.error("Master Bulk invite error:", error);
-    return NextResponse.json({ message: `Internal server error: ${error.message || "Unknown error"}` }, { status: 500 });
+    return NextResponse.json({ message: `System Error: ${error.message || "Unknown error"}` }, { status: 500 });
   }
 }
