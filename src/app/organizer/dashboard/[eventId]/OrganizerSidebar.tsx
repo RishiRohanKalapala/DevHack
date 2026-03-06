@@ -12,7 +12,8 @@ import {
     ExternalLink,
     GitCommit,
     Mail,
-    Trophy
+    Trophy,
+    Hand
 } from "lucide-react";
 
 export default function OrganizerSidebar({ eventId, eventName }: { eventId: string, eventName: string }) {
@@ -25,6 +26,7 @@ export default function OrganizerSidebar({ eventId, eventName }: { eventId: stri
         { name: "Judges Panel", href: `/organizer/dashboard/${eventId}/judges`, icon: Gavel },
         { name: "Bulk Invitations", href: `/organizer/dashboard/${eventId}/bulk-invite`, icon: Mail },
         { name: "Leaderboard Scores", href: `/organizer/dashboard/${eventId}/scoring`, icon: Trophy },
+        { name: "Help Requests", href: `/organizer/dashboard/${eventId}/help-requests`, icon: Hand },
         { name: "Live Timeline", href: `/organizer/dashboard/${eventId}/timeline`, icon: Clock },
         { name: "System Controls", href: `/organizer/dashboard/${eventId}/controls`, icon: Activity },
     ];
