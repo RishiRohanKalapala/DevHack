@@ -39,6 +39,16 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
     console.log("Bulk Dispatch Started for Event:", eventId);
     console.log("Recipient Queue Size:", emails.length);
 
+    // Verify transporter connection once
+    try {
+      console.log("[SMTP] Verifying Connection...");
+      await transporter.verify();
+      console.log("[SMTP] Connection Verified. Ready to send.");
+    } catch (verifyError: any) {
+      console.error("[SMTP] Connection Check Failed:", verifyError);
+      throw new Error(`SMTP Connection Error: ${verifyError.message}`);
+    }
+
     const invitationResults = [];
 
     for (const entry of emails) {
@@ -140,7 +150,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
                   `,
         };
 
-        await transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`[MAIL] Dispatch Successful. ID: ${info.messageId}. Response: ${info.response}`);
 
         // 3. Update status to INVITED
         console.log(`[DB] Activating Status to INVITED for ${cleanEmail}`);
@@ -150,8 +161,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ eventId
         });
 
         invitationResults.push(cleanEmail);
-      } catch (entryError) {
-        console.error(`[CRITICAL] Entry Dispatch Failed for: ${entry.email}`, entryError);
+      } catch (entryError: any) {
+        console.error(`[CRITICAL] Entry Dispatch Failed for: ${entry.email}. Error: ${entryError.message}`);
+        console.debug(entryError);
         // Continue with next entry
       }
     }
